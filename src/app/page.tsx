@@ -151,6 +151,13 @@ function FraudSection() {
             </div>
             <p className="mt-2 text-sm text-slate-600">{signal.description}</p>
             <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-indigo-700">Action: {signal.recommendedAction}</p>
+            {signal.resolution && (
+              <div className="mt-2 rounded-xl border border-emerald-100 bg-emerald-50/70 px-3 py-2">
+                <div className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Resolved</div>
+                <p className="mt-0.5 text-xs text-emerald-800">{signal.resolution}</p>
+                {signal.resolvedAt && <div className="mt-1 text-xs text-emerald-600">{signal.resolvedAt}</div>}
+              </div>
+            )}
           </div>
         ))}
       </div>

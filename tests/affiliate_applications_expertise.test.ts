@@ -56,6 +56,25 @@ describe("affiliate applications expertise demo data", () => {
     expect(demoFraudSignals.some((signal) => signal.applicationId === aiContentApplication?.id && signal.label.includes("AI content"))).toBe(true);
   });
 
+  it("resolves every high-severity fraud signal", () => {
+    const highSignals = demoFraudSignals.filter((signal) => signal.severity === "high");
+    expect(highSignals.length).toBeGreaterThan(0);
+    expect(highSignals.every((signal) => typeof signal.resolution === "string" && signal.resolution.length > 20)).toBe(true);
+    expect(highSignals.every((signal) => typeof signal.resolvedAt === "string")).toBe(true);
+  });
+
+  it("leaves signals under active investigation unresolved", () => {
+    const unresolved = demoFraudSignals.filter((signal) => !signal.resolution);
+    expect(unresolved.length).toBeGreaterThan(0);
+    expect(unresolved.every((signal) => signal.resolvedAt === undefined)).toBe(true);
+  });
+
+  it("links every resolved fraud signal to its parent application", () => {
+    const resolvedSignals = demoFraudSignals.filter((signal) => signal.resolution);
+    const ids = new Set(demoApplications.map((application) => application.id));
+    expect(resolvedSignals.every((signal) => ids.has(signal.applicationId))).toBe(true);
+  });
+
   it("contains high confidence fraud recommendations", () => {
     expect(demoFraudSignals.some((signal) => signal.severity === "high" && signal.confidence >= 85)).toBe(true);
   });

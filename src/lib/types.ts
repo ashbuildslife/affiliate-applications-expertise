@@ -46,6 +46,10 @@ export interface FraudSignal {
   confidence: number;
   description: string;
   recommendedAction: string;
+  /** How the signal was resolved, or undefined if still under investigation */
+  resolution?: string;
+  /** ISO timestamp when the resolution was recorded */
+  resolvedAt?: string;
 }
 
 export interface PayoutRule {
