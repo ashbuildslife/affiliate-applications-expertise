@@ -5,11 +5,14 @@ export type PartnerChannel = "content" | "paid_search" | "influencer" | "newslet
 export type FraudSeverity = "low" | "medium" | "high";
 
 export type ComplianceCheckStatus = "verified" | "needs_evidence" | "missing";
+export type DisclosurePlacement = "with_endorsement" | "below_fold" | "behind_more_link" | "missing";
 
 export interface ComplianceReview {
   affiliateDisclosure: ComplianceCheckStatus;
   aiContentLabeling: ComplianceCheckStatus;
   claimSubstantiation: ComplianceCheckStatus;
+  disclosurePlacement: DisclosurePlacement;
+  disclosureLanguage: string;
   evidenceRequested: string[];
   lastCheckedAt: string;
   reviewerNote: string;

@@ -82,6 +82,26 @@ describe("affiliate applications expertise demo data", () => {
     expect(aiContentApplication?.complianceReview?.reviewerNote).toMatch(/substantiation/i);
   });
 
+  it("captures hard-to-miss disclosure placement evidence", () => {
+    const reviewedApplications = demoApplications.filter((application) => application.complianceReview);
+
+    expect(reviewedApplications.length).toBeGreaterThan(0);
+
+    for (const application of reviewedApplications) {
+      expect(application.complianceReview?.disclosureLanguage.length).toBeGreaterThan(30);
+      expect(application.complianceReview?.evidenceRequested.some((item) => /disclosure|caption|transcript|placement|partnership/i.test(item))).toBe(true);
+    }
+  });
+
+  it("keeps hidden or below-fold disclosure placements out of approval", () => {
+    const weakDisclosureApplications = demoApplications.filter((application) =>
+      ["below_fold", "behind_more_link", "missing"].includes(application.complianceReview?.disclosurePlacement ?? ""),
+    );
+
+    expect(weakDisclosureApplications.length).toBeGreaterThan(0);
+    expect(weakDisclosureApplications.every((application) => application.status !== "approved")).toBe(true);
+  });
+
   it("resolves every high-severity fraud signal", () => {
     const highSignals = demoFraudSignals.filter((signal) => signal.severity === "high");
     expect(highSignals.length).toBeGreaterThan(0);

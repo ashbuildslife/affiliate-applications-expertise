@@ -114,6 +114,16 @@ export const demoApplications: AffiliateApplication[] = [
     notes: "Strong creator fit with clean engagement ratio and repeatable launch calendar.",
     evidence: ["Audience demographics", "Engagement audit", "Disclosure sample"],
     riskFlags: [],
+    complianceReview: {
+      affiliateDisclosure: "verified",
+      aiContentLabeling: "verified",
+      claimSubstantiation: "verified",
+      disclosurePlacement: "with_endorsement",
+      disclosureLanguage: "#ad appears in the first two caption lines and is spoken in the sponsored reel intro.",
+      evidenceRequested: ["Pinned caption disclosure screenshot", "Reel intro transcript", "Platform paid partnership label"],
+      lastCheckedAt: "2026-06-01T13:10:00Z",
+      reviewerNote: "Disclosure appears with the endorsement; the paid partnership tag is supporting evidence, not the only notice.",
+    },
   },
   {
     id: "app_1006",
@@ -239,6 +249,8 @@ export const demoApplications: AffiliateApplication[] = [
       affiliateDisclosure: "missing",
       aiContentLabeling: "needs_evidence",
       claimSubstantiation: "needs_evidence",
+      disclosurePlacement: "below_fold",
+      disclosureLanguage: "Affiliate relationship copy appears after the comparison table and is hidden on mobile until scroll.",
       evidenceRequested: [
         "Above-the-fold affiliate disclosure screenshot",
         "AI content labeling policy for comparison pages",

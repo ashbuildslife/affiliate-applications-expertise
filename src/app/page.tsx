@@ -79,6 +79,11 @@ function ApplicationRow({ application }: { application: AffiliateApplication }) 
       <td className="px-4 py-4 text-sm text-slate-600">{application.requestedCommissionRate}% requested{application.approvedCommissionRate ? `, ${application.approvedCommissionRate}% approved` : ""}</td>
       <td className="px-4 py-4">
         <div className="flex flex-wrap gap-1">{application.riskFlags.length ? application.riskFlags.map((flag) => <Badge key={flag} tone="red">{flag}</Badge>) : <Badge tone="green">clear</Badge>}</div>
+        {application.complianceReview && (
+          <div className="mt-2 text-xs text-slate-500">
+            Disclosure placement: {application.complianceReview.disclosurePlacement.replaceAll("_", " ")}
+          </div>
+        )}
       </td>
     </tr>
   );
