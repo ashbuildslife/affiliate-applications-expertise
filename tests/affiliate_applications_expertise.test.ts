@@ -121,6 +121,25 @@ describe("affiliate applications expertise demo data", () => {
     expect(weakDisclosureApplications.every((application) => application.status !== "approved")).toBe(true);
   });
 
+  it("blocks disclosures hidden behind caption expansion until pre-expansion evidence is captured", () => {
+    const hiddenCaptionApplications = demoApplications.filter(
+      (application) => application.complianceReview?.disclosurePlacement === "behind_more_link",
+    );
+
+    expect(hiddenCaptionApplications.length).toBeGreaterThan(0);
+
+    for (const application of hiddenCaptionApplications) {
+      expect(application.status).not.toBe("approved");
+      expect(application.complianceReview?.evidenceRequested).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(/pre-expansion|caption|visibility/i),
+          expect.stringMatching(/expanded caption|more/i),
+        ]),
+      );
+      expect(application.complianceReview?.reviewerNote).toMatch(/caption|spoken|endorsement/i);
+    }
+  });
+
   it("resolves every high-severity fraud signal", () => {
     const highSignals = demoFraudSignals.filter((signal) => signal.severity === "high");
     expect(highSignals.length).toBeGreaterThan(0);
