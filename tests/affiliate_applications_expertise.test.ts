@@ -140,6 +140,26 @@ describe("affiliate applications expertise demo data", () => {
     }
   });
 
+  it("treats platform paid partnership labels as supporting rather than standalone disclosure evidence", () => {
+    const platformLabelReviews = demoApplications.filter((application) =>
+      application.complianceReview?.evidenceRequested.some((item) => /paid partnership label/i.test(item)),
+    );
+    const labelOnlyApplication = demoApplications.find((application) => application.companyName === "TagOnly Creators");
+
+    expect(platformLabelReviews.length).toBeGreaterThan(0);
+    expect(labelOnlyApplication?.status).toBe("needs_info");
+    expect(labelOnlyApplication?.complianceReview?.affiliateDisclosure).toBe("needs_evidence");
+    expect(labelOnlyApplication?.riskFlags).toEqual(
+      expect.arrayContaining(["Platform label only disclosure", "Missing affiliate disclosure"]),
+    );
+    expect(labelOnlyApplication?.complianceReview?.reviewerNote).toMatch(/platform label evidence alone/i);
+
+    for (const application of platformLabelReviews) {
+      const requestedEvidence = application.complianceReview?.evidenceRequested.join(" ") ?? "";
+      expect(requestedEvidence).toMatch(/caption|transcript|spoken|overlay|disclosure/i);
+    }
+  });
+
   it("resolves every high-severity fraud signal", () => {
     const highSignals = demoFraudSignals.filter((signal) => signal.severity === "high");
     expect(highSignals.length).toBeGreaterThan(0);
