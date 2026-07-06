@@ -6,6 +6,7 @@ export type FraudSeverity = "low" | "medium" | "high";
 
 export type ComplianceCheckStatus = "verified" | "needs_evidence" | "missing";
 export type DisclosurePlacement = "with_endorsement" | "below_fold" | "behind_more_link" | "missing";
+export type DisclosureLanguageMatch = "matched" | "needs_translation" | "unknown";
 export type LiveDisclosureCadence = "repeated_periodically" | "opening_only" | "not_applicable" | "missing";
 
 export interface ComplianceReview {
@@ -14,6 +15,8 @@ export interface ComplianceReview {
   claimSubstantiation: ComplianceCheckStatus;
   disclosurePlacement: DisclosurePlacement;
   disclosureLanguage: string;
+  endorsementLanguage: string;
+  disclosureLanguageMatch: DisclosureLanguageMatch;
   liveDisclosureCadence?: LiveDisclosureCadence;
   liveDisclosureEvidence?: string;
   evidenceRequested: string[];

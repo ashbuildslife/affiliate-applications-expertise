@@ -4,6 +4,7 @@ import { demoActivity, demoAnalytics, demoApplications, demoFraudSignals, demoPa
 const statuses = new Set(["new", "reviewing", "approved", "needs_info", "rejected", "paused"]);
 const channels = new Set(["content", "paid_search", "influencer", "newsletter", "coupon", "b2b"]);
 const liveDisclosureCadences = new Set(["repeated_periodically", "opening_only", "not_applicable", "missing"]);
+const disclosureLanguageMatches = new Set(["matched", "needs_translation", "unknown"]);
 
 describe("affiliate applications expertise demo data", () => {
   it("contains a realistic review queue", () => {
@@ -157,6 +158,30 @@ describe("affiliate applications expertise demo data", () => {
     for (const application of platformLabelReviews) {
       const requestedEvidence = application.complianceReview?.evidenceRequested.join(" ") ?? "";
       expect(requestedEvidence).toMatch(/caption|transcript|spoken|overlay|disclosure/i);
+    }
+  });
+
+  it("requires disclosure language to match the endorsement before approval", () => {
+    const reviewedApplications = demoApplications.filter((application) => application.complianceReview);
+    const unresolvedLanguageReviews = reviewedApplications.filter(
+      (application) => application.complianceReview?.disclosureLanguageMatch !== "matched",
+    );
+    const translationNeededApplications = reviewedApplications.filter(
+      (application) => application.complianceReview?.disclosureLanguageMatch === "needs_translation",
+    );
+
+    expect(reviewedApplications.every((application) => disclosureLanguageMatches.has(application.complianceReview?.disclosureLanguageMatch ?? ""))).toBe(true);
+    expect(unresolvedLanguageReviews.length).toBeGreaterThan(0);
+    expect(unresolvedLanguageReviews.every((application) => application.status !== "approved")).toBe(true);
+    expect(translationNeededApplications.length).toBeGreaterThan(0);
+
+    for (const application of translationNeededApplications) {
+      expect(application.riskFlags).toEqual(expect.arrayContaining([expect.stringMatching(/language|translation/i)]));
+      expect(application.complianceReview?.endorsementLanguage.length).toBeGreaterThan(5);
+      expect(application.complianceReview?.evidenceRequested).toEqual(
+        expect.arrayContaining([expect.stringMatching(/translation|language/i)]),
+      );
+      expect(application.complianceReview?.reviewerNote).toMatch(/same language|endorsement/i);
     }
   });
 

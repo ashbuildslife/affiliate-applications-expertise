@@ -82,6 +82,9 @@ function ApplicationRow({ application }: { application: AffiliateApplication }) 
         {application.complianceReview && (
           <div className="mt-2 text-xs text-slate-500">
             Disclosure placement: {application.complianceReview.disclosurePlacement.replaceAll("_", " ")}
+            <span className="block">
+              Language review: {application.complianceReview.disclosureLanguageMatch.replaceAll("_", " ")} · {application.complianceReview.endorsementLanguage}
+            </span>
             {application.complianceReview.liveDisclosureCadence && (
               <span className="block">Live cadence: {application.complianceReview.liveDisclosureCadence.replaceAll("_", " ")}</span>
             )}
