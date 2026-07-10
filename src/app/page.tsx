@@ -85,6 +85,11 @@ function ApplicationRow({ application }: { application: AffiliateApplication }) 
             <span className="block">
               Language review: {application.complianceReview.disclosureLanguageMatch.replaceAll("_", " ")} · {application.complianceReview.endorsementLanguage}
             </span>
+            {application.complianceReview.testimonialAuthenticity && (
+              <span className="block">
+                Testimonial experience: {application.complianceReview.testimonialAuthenticity.replaceAll("_", " ")} · {application.complianceReview.testimonialExperienceEvidence?.length ?? 0} evidence checks
+              </span>
+            )}
             {application.complianceReview.liveDisclosureCadence && (
               <span className="block">Live cadence: {application.complianceReview.liveDisclosureCadence.replaceAll("_", " ")}</span>
             )}

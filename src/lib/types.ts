@@ -8,11 +8,14 @@ export type ComplianceCheckStatus = "verified" | "needs_evidence" | "missing";
 export type DisclosurePlacement = "with_endorsement" | "below_fold" | "behind_more_link" | "missing";
 export type DisclosureLanguageMatch = "matched" | "needs_translation" | "unknown";
 export type LiveDisclosureCadence = "repeated_periodically" | "opening_only" | "not_applicable" | "missing";
+export type TestimonialAuthenticityStatus = "verified" | "needs_evidence" | "synthetic_persona_blocked";
 
 export interface ComplianceReview {
   affiliateDisclosure: ComplianceCheckStatus;
   aiContentLabeling: ComplianceCheckStatus;
   claimSubstantiation: ComplianceCheckStatus;
+  testimonialAuthenticity?: TestimonialAuthenticityStatus;
+  testimonialExperienceEvidence?: string[];
   disclosurePlacement: DisclosurePlacement;
   disclosureLanguage: string;
   endorsementLanguage: string;

@@ -5,6 +5,7 @@ const statuses = new Set(["new", "reviewing", "approved", "needs_info", "rejecte
 const channels = new Set(["content", "paid_search", "influencer", "newsletter", "coupon", "b2b"]);
 const liveDisclosureCadences = new Set(["repeated_periodically", "opening_only", "not_applicable", "missing"]);
 const disclosureLanguageMatches = new Set(["matched", "needs_translation", "unknown"]);
+const testimonialAuthenticityStatuses = new Set(["verified", "needs_evidence", "synthetic_persona_blocked"]);
 
 describe("affiliate applications expertise demo data", () => {
   it("contains a realistic review queue", () => {
@@ -82,6 +83,32 @@ describe("affiliate applications expertise demo data", () => {
       expect.arrayContaining(["Source documentation for product ranking claims"]),
     );
     expect(aiContentApplication?.complianceReview?.reviewerNote).toMatch(/substantiation/i);
+  });
+
+  it("holds testimonial claims until endorser identity and first-hand experience are verified", () => {
+    const testimonialReviews = demoApplications.filter(
+      (application) => application.complianceReview?.testimonialAuthenticity,
+    );
+
+    expect(testimonialReviews.length).toBeGreaterThan(0);
+
+    for (const application of testimonialReviews) {
+      const review = application.complianceReview;
+      const requestedEvidence = [
+        ...(review?.evidenceRequested ?? []),
+        ...(review?.testimonialExperienceEvidence ?? []),
+      ].join(" ");
+
+      expect(testimonialAuthenticityStatuses.has(review?.testimonialAuthenticity ?? "")).toBe(true);
+      expect(application.riskFlags).toEqual(expect.arrayContaining([expect.stringMatching(/testimonial/i)]));
+      expect(requestedEvidence).toMatch(/identity|product-access|purchase|first-hand|product experience/i);
+      expect(review?.testimonialExperienceEvidence?.length ?? 0).toBeGreaterThanOrEqual(2);
+
+      if (review?.testimonialAuthenticity !== "verified") {
+        expect(application.status).not.toBe("approved");
+        expect(review?.reviewerNote).toMatch(/reviewer|first-hand|experience/i);
+      }
+    }
   });
 
   it("captures hard-to-miss disclosure placement evidence", () => {
