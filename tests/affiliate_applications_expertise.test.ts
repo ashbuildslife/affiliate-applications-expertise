@@ -6,6 +6,7 @@ const channels = new Set(["content", "paid_search", "influencer", "newsletter", 
 const liveDisclosureCadences = new Set(["repeated_periodically", "opening_only", "not_applicable", "missing"]);
 const disclosureLanguageMatches = new Set(["matched", "needs_translation", "unknown"]);
 const testimonialAuthenticityStatuses = new Set(["verified", "needs_evidence", "synthetic_persona_blocked"]);
+const endorserMonitoringReadinesses = new Set(["documented", "needs_plan", "missing"]);
 
 describe("affiliate applications expertise demo data", () => {
   it("contains a realistic review queue", () => {
@@ -108,6 +109,50 @@ describe("affiliate applications expertise demo data", () => {
         expect(application.status).not.toBe("approved");
         expect(review?.reviewerNote).toMatch(/reviewer|first-hand|experience/i);
       }
+    }
+  });
+
+  it("keeps applications without an endorser monitoring plan out of approval", () => {
+    const monitoringReviews = demoApplications.filter(
+      (application) => application.complianceReview?.endorserMonitoringReadiness,
+    );
+    const unresolvedMonitoringReviews = monitoringReviews.filter(
+      (application) => application.complianceReview?.endorserMonitoringReadiness !== "documented",
+    );
+
+    expect(monitoringReviews.length).toBeGreaterThanOrEqual(2);
+    expect(
+      monitoringReviews.every((application) =>
+        endorserMonitoringReadinesses.has(application.complianceReview?.endorserMonitoringReadiness ?? ""),
+      ),
+    ).toBe(true);
+    expect(unresolvedMonitoringReviews.length).toBeGreaterThan(0);
+
+    for (const application of unresolvedMonitoringReviews) {
+      expect(application.status).not.toBe("approved");
+      expect(application.riskFlags).toEqual(expect.arrayContaining([expect.stringMatching(/monitor/i)]));
+      expect(application.complianceReview?.evidenceRequested).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(/training|approved-claims/i),
+          expect.stringMatching(/monitoring|caption|transcript/i),
+          expect.stringMatching(/correction|escalation/i),
+        ]),
+      );
+    }
+  });
+
+  it("documents training, periodic monitoring, and corrective-action controls", () => {
+    const documentedMonitoringReviews = demoApplications.filter(
+      (application) => application.complianceReview?.endorserMonitoringReadiness === "documented",
+    );
+
+    expect(documentedMonitoringReviews.length).toBeGreaterThan(0);
+
+    for (const application of documentedMonitoringReviews) {
+      const evidence = application.complianceReview?.endorserMonitoringEvidence?.join(" ") ?? "";
+      expect(evidence).toMatch(/training|approved-claims|guidance/i);
+      expect(evidence).toMatch(/monitor|review|search/i);
+      expect(evidence).toMatch(/correction|escalation|action/i);
     }
   });
 
