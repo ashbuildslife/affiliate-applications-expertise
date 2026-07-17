@@ -259,7 +259,7 @@ export const demoApplications: AffiliateApplication[] = [
     reviewer: "Compliance bot",
     notes: "AI-generated comparison pages look commercially relevant, but disclosure placement and substantiation for product claims need verification before approval.",
     evidence: ["AI content sample", "Disclosure placement crawl", "Claim substantiation checklist"],
-    riskFlags: ["Missing affiliate disclosure", "AI content labeling review", "Testimonial authenticity review"],
+    riskFlags: ["Missing affiliate disclosure", "AI content labeling review", "Testimonial authenticity review", "Sentiment-conditioned review incentives"],
     complianceReview: {
       affiliateDisclosure: "missing",
       aiContentLabeling: "needs_evidence",
@@ -270,6 +270,11 @@ export const demoApplications: AffiliateApplication[] = [
         "Timestamped product-access or purchase evidence",
         "Original interview or first-hand product experience transcript",
       ],
+      reviewIncentivePolicy: "sentiment_conditioned",
+      reviewIncentiveEvidence: [
+        "Reviewer brief offers a bonus only for four- or five-star ratings",
+        "No sentiment-neutral invitation or negative-review publication control supplied",
+      ],
       disclosurePlacement: "below_fold",
       disclosureLanguage: "Affiliate relationship copy appears after the comparison table and is hidden on mobile until scroll.",
       endorsementLanguage: "English (US)",
@@ -279,9 +284,10 @@ export const demoApplications: AffiliateApplication[] = [
         "AI content labeling policy for comparison pages",
         "Source documentation for product ranking claims",
         "Named reviewer identity and first-hand product experience evidence",
+        "Revised incentive policy making compensation independent of review sentiment",
       ],
       lastCheckedAt: "2026-06-06T12:05:00Z",
-      reviewerNote: "Hold approval until disclosure placement, claim substantiation, and the named reviewers' first-hand experience are verified.",
+      reviewerNote: "Hold approval until disclosure placement, claim substantiation, first-hand experience, and sentiment-neutral review incentives are verified.",
     },
   },
   {

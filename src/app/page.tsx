@@ -95,6 +95,11 @@ function ApplicationRow({ application }: { application: AffiliateApplication }) 
                 Monitoring readiness: {application.complianceReview.endorserMonitoringReadiness.replaceAll("_", " ")} · {application.complianceReview.endorserMonitoringEvidence?.length ?? 0} control records
               </span>
             )}
+            {application.complianceReview.reviewIncentivePolicy && (
+              <span className="block">
+                Review incentives: {application.complianceReview.reviewIncentivePolicy.replaceAll("_", " ")} · {application.complianceReview.reviewIncentiveEvidence?.length ?? 0} evidence checks
+              </span>
+            )}
             {application.complianceReview.liveDisclosureCadence && (
               <span className="block">Live cadence: {application.complianceReview.liveDisclosureCadence.replaceAll("_", " ")}</span>
             )}

@@ -10,6 +10,7 @@ export type DisclosureLanguageMatch = "matched" | "needs_translation" | "unknown
 export type LiveDisclosureCadence = "repeated_periodically" | "opening_only" | "not_applicable" | "missing";
 export type TestimonialAuthenticityStatus = "verified" | "needs_evidence" | "synthetic_persona_blocked";
 export type EndorserMonitoringReadiness = "documented" | "needs_plan" | "missing";
+export type ReviewIncentivePolicy = "neutral" | "sentiment_conditioned" | "not_used" | "unknown";
 
 export interface ComplianceReview {
   affiliateDisclosure: ComplianceCheckStatus;
@@ -19,6 +20,8 @@ export interface ComplianceReview {
   testimonialExperienceEvidence?: string[];
   endorserMonitoringReadiness?: EndorserMonitoringReadiness;
   endorserMonitoringEvidence?: string[];
+  reviewIncentivePolicy?: ReviewIncentivePolicy;
+  reviewIncentiveEvidence?: string[];
   disclosurePlacement: DisclosurePlacement;
   disclosureLanguage: string;
   endorsementLanguage: string;

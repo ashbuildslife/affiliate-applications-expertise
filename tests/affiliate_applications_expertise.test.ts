@@ -7,6 +7,7 @@ const liveDisclosureCadences = new Set(["repeated_periodically", "opening_only",
 const disclosureLanguageMatches = new Set(["matched", "needs_translation", "unknown"]);
 const testimonialAuthenticityStatuses = new Set(["verified", "needs_evidence", "synthetic_persona_blocked"]);
 const endorserMonitoringReadinesses = new Set(["documented", "needs_plan", "missing"]);
+const reviewIncentivePolicies = new Set(["neutral", "sentiment_conditioned", "not_used", "unknown"]);
 
 describe("affiliate applications expertise demo data", () => {
   it("contains a realistic review queue", () => {
@@ -109,6 +110,32 @@ describe("affiliate applications expertise demo data", () => {
         expect(application.status).not.toBe("approved");
         expect(review?.reviewerNote).toMatch(/reviewer|first-hand|experience/i);
       }
+    }
+  });
+
+  it("keeps sentiment-conditioned review incentives out of approval", () => {
+    const reviewedApplications = demoApplications.filter(
+      (application) => application.complianceReview?.reviewIncentivePolicy,
+    );
+    const sentimentConditionedApplications = reviewedApplications.filter(
+      (application) => application.complianceReview?.reviewIncentivePolicy === "sentiment_conditioned",
+    );
+
+    expect(reviewedApplications.length).toBeGreaterThan(0);
+    expect(
+      reviewedApplications.every((application) =>
+        reviewIncentivePolicies.has(application.complianceReview?.reviewIncentivePolicy ?? ""),
+      ),
+    ).toBe(true);
+    expect(sentimentConditionedApplications.length).toBeGreaterThan(0);
+
+    for (const application of sentimentConditionedApplications) {
+      expect(application.status).not.toBe("approved");
+      expect(application.riskFlags).toEqual(expect.arrayContaining([expect.stringMatching(/incentive|sentiment/i)]));
+      expect(application.complianceReview?.reviewIncentiveEvidence?.join(" ")).toMatch(/bonus|rating|sentiment/i);
+      expect(application.complianceReview?.evidenceRequested).toEqual(
+        expect.arrayContaining([expect.stringMatching(/independent|neutral|sentiment/i)]),
+      );
     }
   });
 
