@@ -100,6 +100,11 @@ function ApplicationRow({ application }: { application: AffiliateApplication }) 
                 Review incentives: {application.complianceReview.reviewIncentivePolicy.replaceAll("_", " ")} · {application.complianceReview.reviewIncentiveEvidence?.length ?? 0} evidence checks
               </span>
             )}
+            {application.complianceReview.reviewSuppressionPolicy && (
+              <span className="block">
+                Review suppression: {application.complianceReview.reviewSuppressionPolicy.replaceAll("_", " ")} · {application.complianceReview.reviewSuppressionEvidence?.length ?? 0} evidence checks
+              </span>
+            )}
             {application.complianceReview.liveDisclosureCadence && (
               <span className="block">Live cadence: {application.complianceReview.liveDisclosureCadence.replaceAll("_", " ")}</span>
             )}

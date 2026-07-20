@@ -259,7 +259,7 @@ export const demoApplications: AffiliateApplication[] = [
     reviewer: "Compliance bot",
     notes: "AI-generated comparison pages look commercially relevant, but disclosure placement and substantiation for product claims need verification before approval.",
     evidence: ["AI content sample", "Disclosure placement crawl", "Claim substantiation checklist"],
-    riskFlags: ["Missing affiliate disclosure", "AI content labeling review", "Testimonial authenticity review", "Sentiment-conditioned review incentives"],
+    riskFlags: ["Missing affiliate disclosure", "AI content labeling review", "Testimonial authenticity review", "Sentiment-conditioned review incentives", "Negative review suppression risk"],
     complianceReview: {
       affiliateDisclosure: "missing",
       aiContentLabeling: "needs_evidence",
@@ -275,6 +275,11 @@ export const demoApplications: AffiliateApplication[] = [
         "Reviewer brief offers a bonus only for four- or five-star ratings",
         "No sentiment-neutral invitation or negative-review publication control supplied",
       ],
+      reviewSuppressionPolicy: "rating_filtered",
+      reviewSuppressionEvidence: [
+        "Moderation policy auto-publishes four- and five-star reviews while routing lower ratings to a private resolution queue",
+        "Review export omits negative submissions without documented content-neutral removal reasons",
+      ],
       disclosurePlacement: "below_fold",
       disclosureLanguage: "Affiliate relationship copy appears after the comparison table and is hidden on mobile until scroll.",
       endorsementLanguage: "English (US)",
@@ -285,9 +290,11 @@ export const demoApplications: AffiliateApplication[] = [
         "Source documentation for product ranking claims",
         "Named reviewer identity and first-hand product experience evidence",
         "Revised incentive policy making compensation independent of review sentiment",
+        "Content-neutral moderation policy applied equally to positive and negative reviews",
+        "Unfiltered review export reconciling published, rejected, and removed submissions",
       ],
       lastCheckedAt: "2026-06-06T12:05:00Z",
-      reviewerNote: "Hold approval until disclosure placement, claim substantiation, first-hand experience, and sentiment-neutral review incentives are verified.",
+      reviewerNote: "Hold approval until disclosure placement, claim substantiation, first-hand experience, sentiment-neutral incentives, and content-neutral review moderation are verified.",
     },
   },
   {

@@ -8,6 +8,7 @@ const disclosureLanguageMatches = new Set(["matched", "needs_translation", "unkn
 const testimonialAuthenticityStatuses = new Set(["verified", "needs_evidence", "synthetic_persona_blocked"]);
 const endorserMonitoringReadinesses = new Set(["documented", "needs_plan", "missing"]);
 const reviewIncentivePolicies = new Set(["neutral", "sentiment_conditioned", "not_used", "unknown"]);
+const reviewSuppressionPolicies = new Set(["content_neutral", "rating_filtered", "threats_or_intimidation", "unknown"]);
 
 describe("affiliate applications expertise demo data", () => {
   it("contains a realistic review queue", () => {
@@ -135,6 +136,39 @@ describe("affiliate applications expertise demo data", () => {
       expect(application.complianceReview?.reviewIncentiveEvidence?.join(" ")).toMatch(/bonus|rating|sentiment/i);
       expect(application.complianceReview?.evidenceRequested).toEqual(
         expect.arrayContaining([expect.stringMatching(/independent|neutral|sentiment/i)]),
+      );
+    }
+  });
+
+  it("keeps rating-filtered review programs out of approval", () => {
+    const suppressionReviews = demoApplications.filter(
+      (application) => application.complianceReview?.reviewSuppressionPolicy,
+    );
+    const unresolvedSuppressionReviews = suppressionReviews.filter(
+      (application) => application.complianceReview?.reviewSuppressionPolicy !== "content_neutral",
+    );
+
+    expect(suppressionReviews.length).toBeGreaterThan(0);
+    expect(
+      suppressionReviews.every((application) =>
+        reviewSuppressionPolicies.has(application.complianceReview?.reviewSuppressionPolicy ?? ""),
+      ),
+    ).toBe(true);
+    expect(unresolvedSuppressionReviews.length).toBeGreaterThan(0);
+
+    for (const application of unresolvedSuppressionReviews) {
+      expect(application.status).not.toBe("approved");
+      expect(application.riskFlags).toEqual(
+        expect.arrayContaining([expect.stringMatching(/suppression|review moderation/i)]),
+      );
+      expect(application.complianceReview?.reviewSuppressionEvidence?.join(" ")).toMatch(
+        /rating|negative|publish|moderation/i,
+      );
+      expect(application.complianceReview?.evidenceRequested).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(/content-neutral|equally|moderation/i),
+          expect.stringMatching(/unfiltered|published|removed/i),
+        ]),
       );
     }
   });

@@ -11,6 +11,7 @@ export type LiveDisclosureCadence = "repeated_periodically" | "opening_only" | "
 export type TestimonialAuthenticityStatus = "verified" | "needs_evidence" | "synthetic_persona_blocked";
 export type EndorserMonitoringReadiness = "documented" | "needs_plan" | "missing";
 export type ReviewIncentivePolicy = "neutral" | "sentiment_conditioned" | "not_used" | "unknown";
+export type ReviewSuppressionPolicy = "content_neutral" | "rating_filtered" | "threats_or_intimidation" | "unknown";
 
 export interface ComplianceReview {
   affiliateDisclosure: ComplianceCheckStatus;
@@ -22,6 +23,8 @@ export interface ComplianceReview {
   endorserMonitoringEvidence?: string[];
   reviewIncentivePolicy?: ReviewIncentivePolicy;
   reviewIncentiveEvidence?: string[];
+  reviewSuppressionPolicy?: ReviewSuppressionPolicy;
+  reviewSuppressionEvidence?: string[];
   disclosurePlacement: DisclosurePlacement;
   disclosureLanguage: string;
   endorsementLanguage: string;
