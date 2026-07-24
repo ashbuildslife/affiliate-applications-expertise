@@ -9,6 +9,7 @@ const testimonialAuthenticityStatuses = new Set(["verified", "needs_evidence", "
 const endorserMonitoringReadinesses = new Set(["documented", "needs_plan", "missing"]);
 const reviewIncentivePolicies = new Set(["neutral", "sentiment_conditioned", "not_used", "unknown"]);
 const reviewSuppressionPolicies = new Set(["content_neutral", "rating_filtered", "threats_or_intimidation", "unknown"]);
+const insiderReviewDisclosureStatuses = new Set(["disclosed", "undisclosed", "not_applicable", "unknown"]);
 
 describe("affiliate applications expertise demo data", () => {
   it("contains a realistic review queue", () => {
@@ -168,6 +169,39 @@ describe("affiliate applications expertise demo data", () => {
         expect.arrayContaining([
           expect.stringMatching(/content-neutral|equally|moderation/i),
           expect.stringMatching(/unfiltered|published|removed/i),
+        ]),
+      );
+    }
+  });
+
+  it("keeps undisclosed insider reviews out of approval", () => {
+    const insiderReviews = demoApplications.filter(
+      (application) => application.complianceReview?.insiderReviewDisclosure,
+    );
+    const unresolvedInsiderReviews = insiderReviews.filter((application) =>
+      ["undisclosed", "unknown"].includes(application.complianceReview?.insiderReviewDisclosure ?? ""),
+    );
+
+    expect(insiderReviews.length).toBeGreaterThan(0);
+    expect(
+      insiderReviews.every((application) =>
+        insiderReviewDisclosureStatuses.has(application.complianceReview?.insiderReviewDisclosure ?? ""),
+      ),
+    ).toBe(true);
+    expect(unresolvedInsiderReviews.length).toBeGreaterThan(0);
+
+    for (const application of unresolvedInsiderReviews) {
+      expect(application.status).not.toBe("approved");
+      expect(application.riskFlags).toEqual(
+        expect.arrayContaining([expect.stringMatching(/insider|employee|relationship/i)]),
+      );
+      expect(application.complianceReview?.insiderReviewEvidence?.join(" ")).toMatch(
+        /employee|manager|staff|relationship/i,
+      );
+      expect(application.complianceReview?.evidenceRequested).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(/insider relationship|connection disclosure/i),
+          expect.stringMatching(/officer|manager|employee|agent|relative/i),
         ]),
       );
     }
