@@ -110,6 +110,11 @@ function ApplicationRow({ application }: { application: AffiliateApplication }) 
                 Insider review disclosure: {application.complianceReview.insiderReviewDisclosure.replaceAll("_", " ")} · {application.complianceReview.insiderReviewEvidence?.length ?? 0} evidence checks
               </span>
             )}
+            {application.complianceReview.reviewSiteIndependence && (
+              <span className="block">
+                Review-site independence: {application.complianceReview.reviewSiteIndependence.replaceAll("_", " ")} · {application.complianceReview.reviewSiteOwnershipEvidence?.length ?? 0} ownership checks
+              </span>
+            )}
             {application.complianceReview.liveDisclosureCadence && (
               <span className="block">Live cadence: {application.complianceReview.liveDisclosureCadence.replaceAll("_", " ")}</span>
             )}

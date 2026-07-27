@@ -10,6 +10,7 @@ const endorserMonitoringReadinesses = new Set(["documented", "needs_plan", "miss
 const reviewIncentivePolicies = new Set(["neutral", "sentiment_conditioned", "not_used", "unknown"]);
 const reviewSuppressionPolicies = new Set(["content_neutral", "rating_filtered", "threats_or_intimidation", "unknown"]);
 const insiderReviewDisclosureStatuses = new Set(["disclosed", "undisclosed", "not_applicable", "unknown"]);
+const reviewSiteIndependenceStatuses = new Set(["independent", "controlled_disclosed", "controlled_misrepresented", "unknown"]);
 
 describe("affiliate applications expertise demo data", () => {
   it("contains a realistic review queue", () => {
@@ -204,6 +205,42 @@ describe("affiliate applications expertise demo data", () => {
           expect.stringMatching(/officer|manager|employee|agent|relative/i),
         ]),
       );
+    }
+  });
+
+  it("keeps company-controlled review sites that claim independence out of approval", () => {
+    const independenceReviews = demoApplications.filter(
+      (application) => application.complianceReview?.reviewSiteIndependence,
+    );
+    const unresolvedIndependenceReviews = independenceReviews.filter((application) =>
+      ["controlled_misrepresented", "unknown"].includes(
+        application.complianceReview?.reviewSiteIndependence ?? "",
+      ),
+    );
+
+    expect(independenceReviews.length).toBeGreaterThan(0);
+    expect(
+      independenceReviews.every((application) =>
+        reviewSiteIndependenceStatuses.has(application.complianceReview?.reviewSiteIndependence ?? ""),
+      ),
+    ).toBe(true);
+    expect(unresolvedIndependenceReviews.length).toBeGreaterThan(0);
+
+    for (const application of unresolvedIndependenceReviews) {
+      expect(application.status).not.toBe("approved");
+      expect(application.riskFlags).toEqual(
+        expect.arrayContaining([expect.stringMatching(/review site|independence|company-controlled/i)]),
+      );
+      expect(application.complianceReview?.reviewSiteOwnershipEvidence?.join(" ")).toMatch(
+        /owner|ownership|control|corporate|brand/i,
+      );
+      expect(application.complianceReview?.evidenceRequested).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(/ownership|control map/i),
+          expect.stringMatching(/ownership disclosure|separation evidence|independence/i),
+        ]),
+      );
+      expect(application.complianceReview?.reviewerNote).toMatch(/ownership|independence/i);
     }
   });
 

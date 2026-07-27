@@ -13,6 +13,7 @@ export type EndorserMonitoringReadiness = "documented" | "needs_plan" | "missing
 export type ReviewIncentivePolicy = "neutral" | "sentiment_conditioned" | "not_used" | "unknown";
 export type ReviewSuppressionPolicy = "content_neutral" | "rating_filtered" | "threats_or_intimidation" | "unknown";
 export type InsiderReviewDisclosureStatus = "disclosed" | "undisclosed" | "not_applicable" | "unknown";
+export type ReviewSiteIndependenceStatus = "independent" | "controlled_disclosed" | "controlled_misrepresented" | "unknown";
 
 export interface ComplianceReview {
   affiliateDisclosure: ComplianceCheckStatus;
@@ -28,6 +29,8 @@ export interface ComplianceReview {
   reviewSuppressionEvidence?: string[];
   insiderReviewDisclosure?: InsiderReviewDisclosureStatus;
   insiderReviewEvidence?: string[];
+  reviewSiteIndependence?: ReviewSiteIndependenceStatus;
+  reviewSiteOwnershipEvidence?: string[];
   disclosurePlacement: DisclosurePlacement;
   disclosureLanguage: string;
   endorsementLanguage: string;
