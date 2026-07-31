@@ -14,6 +14,7 @@ export type ReviewIncentivePolicy = "neutral" | "sentiment_conditioned" | "not_u
 export type ReviewSuppressionPolicy = "content_neutral" | "rating_filtered" | "threats_or_intimidation" | "unknown";
 export type InsiderReviewDisclosureStatus = "disclosed" | "undisclosed" | "not_applicable" | "unknown";
 export type ReviewSiteIndependenceStatus = "independent" | "controlled_disclosed" | "controlled_misrepresented" | "unknown";
+export type SocialInfluenceIndicatorStatus = "verified_authentic" | "needs_evidence" | "fake_or_hijacked";
 
 export interface ComplianceReview {
   affiliateDisclosure: ComplianceCheckStatus;
@@ -31,6 +32,8 @@ export interface ComplianceReview {
   insiderReviewEvidence?: string[];
   reviewSiteIndependence?: ReviewSiteIndependenceStatus;
   reviewSiteOwnershipEvidence?: string[];
+  socialInfluenceIndicators?: SocialInfluenceIndicatorStatus;
+  socialInfluenceEvidence?: string[];
   disclosurePlacement: DisclosurePlacement;
   disclosureLanguage: string;
   endorsementLanguage: string;

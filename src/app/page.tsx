@@ -115,6 +115,11 @@ function ApplicationRow({ application }: { application: AffiliateApplication }) 
                 Review-site independence: {application.complianceReview.reviewSiteIndependence.replaceAll("_", " ")} · {application.complianceReview.reviewSiteOwnershipEvidence?.length ?? 0} ownership checks
               </span>
             )}
+            {application.complianceReview.socialInfluenceIndicators && (
+              <span className="block">
+                Social influence: {application.complianceReview.socialInfluenceIndicators.replaceAll("_", " ")} · {application.complianceReview.socialInfluenceEvidence?.length ?? 0} evidence checks
+              </span>
+            )}
             {application.complianceReview.liveDisclosureCadence && (
               <span className="block">Live cadence: {application.complianceReview.liveDisclosureCadence.replaceAll("_", " ")}</span>
             )}

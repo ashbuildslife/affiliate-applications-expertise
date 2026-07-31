@@ -11,6 +11,7 @@ const reviewIncentivePolicies = new Set(["neutral", "sentiment_conditioned", "no
 const reviewSuppressionPolicies = new Set(["content_neutral", "rating_filtered", "threats_or_intimidation", "unknown"]);
 const insiderReviewDisclosureStatuses = new Set(["disclosed", "undisclosed", "not_applicable", "unknown"]);
 const reviewSiteIndependenceStatuses = new Set(["independent", "controlled_disclosed", "controlled_misrepresented", "unknown"]);
+const socialInfluenceIndicatorStatuses = new Set(["verified_authentic", "needs_evidence", "fake_or_hijacked"]);
 
 describe("affiliate applications expertise demo data", () => {
   it("contains a realistic review queue", () => {
@@ -241,6 +242,41 @@ describe("affiliate applications expertise demo data", () => {
         ]),
       );
       expect(application.complianceReview?.reviewerNote).toMatch(/ownership|independence/i);
+    }
+  });
+
+  it("keeps applicants using fake social influence indicators out of approval", () => {
+    const influenceReviews = demoApplications.filter(
+      (application) => application.complianceReview?.socialInfluenceIndicators,
+    );
+    const fakeInfluenceReviews = influenceReviews.filter(
+      (application) => application.complianceReview?.socialInfluenceIndicators === "fake_or_hijacked",
+    );
+
+    expect(influenceReviews.length).toBeGreaterThan(0);
+    expect(
+      influenceReviews.every((application) =>
+        socialInfluenceIndicatorStatuses.has(application.complianceReview?.socialInfluenceIndicators ?? ""),
+      ),
+    ).toBe(true);
+    expect(fakeInfluenceReviews.length).toBeGreaterThan(0);
+
+    for (const application of fakeInfluenceReviews) {
+      expect(application.status).not.toBe("approved");
+      expect(application.riskFlags).toEqual(
+        expect.arrayContaining([expect.stringMatching(/fake.*social|followers|influence/i)]),
+      );
+      expect(application.complianceReview?.socialInfluenceEvidence?.join(" ")).toMatch(
+        /bot|hijacked|follower|vendor|invoice/i,
+      );
+      expect(application.complianceReview?.evidenceRequested).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(/vendor|contract|invoice|growth/i),
+          expect.stringMatching(/audit|bot|hijacked|real user/i),
+          expect.stringMatching(/media kit|metrics|fake indicators/i),
+        ]),
+      );
+      expect(application.complianceReview?.reviewerNote).toMatch(/fake|follower|influence/i);
     }
   });
 
