@@ -12,6 +12,7 @@ const reviewSuppressionPolicies = new Set(["content_neutral", "rating_filtered",
 const insiderReviewDisclosureStatuses = new Set(["disclosed", "undisclosed", "not_applicable", "unknown"]);
 const reviewSiteIndependenceStatuses = new Set(["independent", "controlled_disclosed", "controlled_misrepresented", "unknown"]);
 const socialInfluenceIndicatorStatuses = new Set(["verified_authentic", "needs_evidence", "fake_or_hijacked"]);
+const subpublisherTransparencyStatuses = new Set(["full_roster", "shared_ids_only", "undisclosed", "not_applicable"]);
 
 describe("affiliate applications expertise demo data", () => {
   it("contains a realistic review queue", () => {
@@ -242,6 +243,43 @@ describe("affiliate applications expertise demo data", () => {
         ]),
       );
       expect(application.complianceReview?.reviewerNote).toMatch(/ownership|independence/i);
+    }
+  });
+
+  it("keeps undisclosed subpublisher traffic out of approval", () => {
+    const transparencyReviews = demoApplications.filter(
+      (application) => application.complianceReview?.subpublisherTransparency,
+    );
+    const unresolvedTransparencyReviews = transparencyReviews.filter((application) =>
+      ["shared_ids_only", "undisclosed"].includes(
+        application.complianceReview?.subpublisherTransparency ?? "",
+      ),
+    );
+
+    expect(transparencyReviews.length).toBeGreaterThan(0);
+    expect(
+      transparencyReviews.every((application) =>
+        subpublisherTransparencyStatuses.has(application.complianceReview?.subpublisherTransparency ?? ""),
+      ),
+    ).toBe(true);
+    expect(unresolvedTransparencyReviews.length).toBeGreaterThan(0);
+
+    for (const application of unresolvedTransparencyReviews) {
+      expect(application.status).not.toBe("approved");
+      expect(application.riskFlags).toEqual(
+        expect.arrayContaining([expect.stringMatching(/subpublisher|sub-affiliate|publisher transparency/i)]),
+      );
+      expect(application.complianceReview?.subpublisherEvidence?.join(" ")).toMatch(
+        /subpublisher|publisher ID|referring publisher/i,
+      );
+      expect(application.complianceReview?.evidenceRequested).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(/roster|stable ID|publisher URL/i),
+          expect.stringMatching(/click|conversion|attribution/i),
+          expect.stringMatching(/owner|removal|prohibited/i),
+        ]),
+      );
+      expect(application.complianceReview?.reviewerNote).toMatch(/publisher-level|subpublisher|transparency/i);
     }
   });
 

@@ -120,6 +120,11 @@ function ApplicationRow({ application }: { application: AffiliateApplication }) 
                 Social influence: {application.complianceReview.socialInfluenceIndicators.replaceAll("_", " ")} · {application.complianceReview.socialInfluenceEvidence?.length ?? 0} evidence checks
               </span>
             )}
+            {application.complianceReview.subpublisherTransparency && (
+              <span className="block">
+                Subpublisher transparency: {application.complianceReview.subpublisherTransparency.replaceAll("_", " ")} · {application.complianceReview.subpublisherEvidence?.length ?? 0} publisher checks
+              </span>
+            )}
             {application.complianceReview.liveDisclosureCadence && (
               <span className="block">Live cadence: {application.complianceReview.liveDisclosureCadence.replaceAll("_", " ")}</span>
             )}
