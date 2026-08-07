@@ -281,7 +281,7 @@ export const demoApplications: AffiliateApplication[] = [
     reviewer: "Compliance bot",
     notes: "AI-generated comparison pages look commercially relevant, but disclosure placement and substantiation for product claims need verification before approval.",
     evidence: ["AI content sample", "Disclosure placement crawl", "Claim substantiation checklist"],
-    riskFlags: ["Missing affiliate disclosure", "AI content labeling review", "Testimonial authenticity review", "Sentiment-conditioned review incentives", "Negative review suppression risk", "Undisclosed insider review", "Misrepresented review site independence"],
+    riskFlags: ["Missing affiliate disclosure", "AI content labeling review", "Testimonial authenticity review", "Sentiment-conditioned review incentives", "Negative review suppression risk", "Undisclosed insider review", "Misrepresented review site independence", "Cross-product review repurposing"],
     complianceReview: {
       affiliateDisclosure: "missing",
       aiContentLabeling: "needs_evidence",
@@ -312,6 +312,11 @@ export const demoApplications: AffiliateApplication[] = [
         "Corporate registry links the comparison site's beneficial owner to the manufacturer ranked first",
         "The site's About page claims independent testing without disclosing the common ownership",
       ],
+      reviewRepurposing: "repurposed_across_products",
+      reviewRepurposingEvidence: [
+        "Review export shows identical reviewer text and timestamps carried onto a substantially different replacement model after a catalog merge",
+        "Legacy review count and star average from the discontinued model were retained on the new product page without reviewer notice or re-collection",
+      ],
       disclosurePlacement: "below_fold",
       disclosureLanguage: "Affiliate relationship copy appears after the comparison table and is hidden on mobile until scroll.",
       endorsementLanguage: "English (US)",
@@ -328,9 +333,11 @@ export const demoApplications: AffiliateApplication[] = [
         "Reviewer roster reconciling officers, managers, employees, agents, and immediate relatives",
         "Beneficial-ownership records and control map for the review site and ranked brands",
         "Clear on-page ownership disclosure or separation evidence supporting the independence claim",
+        "Product-by-product review provenance export matching each review to the product version it was written for",
+        "Corrected pages that remove or re-collect legacy reviews attached to substantially different products",
       ],
       lastCheckedAt: "2026-06-06T12:05:00Z",
-      reviewerNote: "Hold approval until disclosure placement, claim substantiation, first-hand experience, sentiment-neutral incentives, content-neutral review moderation, the insider employee relationship, and review-site ownership and independence are verified.",
+      reviewerNote: "Hold approval until disclosure placement, claim substantiation, first-hand experience, sentiment-neutral incentives, content-neutral review moderation, the insider employee relationship, review-site ownership and independence, and cross-product review repurposing are verified.",
     },
   },
   {

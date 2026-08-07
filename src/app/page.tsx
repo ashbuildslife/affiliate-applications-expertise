@@ -125,6 +125,11 @@ function ApplicationRow({ application }: { application: AffiliateApplication }) 
                 Subpublisher transparency: {application.complianceReview.subpublisherTransparency.replaceAll("_", " ")} · {application.complianceReview.subpublisherEvidence?.length ?? 0} publisher checks
               </span>
             )}
+            {application.complianceReview.reviewRepurposing && (
+              <span className="block">
+                Review repurposing: {application.complianceReview.reviewRepurposing.replaceAll("_", " ")} · {application.complianceReview.reviewRepurposingEvidence?.length ?? 0} provenance checks
+              </span>
+            )}
             {application.complianceReview.liveDisclosureCadence && (
               <span className="block">Live cadence: {application.complianceReview.liveDisclosureCadence.replaceAll("_", " ")}</span>
             )}

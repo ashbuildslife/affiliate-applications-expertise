@@ -13,6 +13,7 @@ const insiderReviewDisclosureStatuses = new Set(["disclosed", "undisclosed", "no
 const reviewSiteIndependenceStatuses = new Set(["independent", "controlled_disclosed", "controlled_misrepresented", "unknown"]);
 const socialInfluenceIndicatorStatuses = new Set(["verified_authentic", "needs_evidence", "fake_or_hijacked"]);
 const subpublisherTransparencyStatuses = new Set(["full_roster", "shared_ids_only", "undisclosed", "not_applicable"]);
+const reviewRepurposingStatuses = new Set(["matched_to_product", "repurposed_across_products", "needs_evidence", "not_applicable"]);
 
 describe("affiliate applications expertise demo data", () => {
   it("contains a realistic review queue", () => {
@@ -280,6 +281,42 @@ describe("affiliate applications expertise demo data", () => {
         ]),
       );
       expect(application.complianceReview?.reviewerNote).toMatch(/publisher-level|subpublisher|transparency/i);
+    }
+  });
+
+  it("keeps reviews repurposed across substantially different products out of approval", () => {
+    const repurposingReviews = demoApplications.filter(
+      (application) => application.complianceReview?.reviewRepurposing,
+    );
+    const unresolvedRepurposing = repurposingReviews.filter((application) =>
+      ["repurposed_across_products", "needs_evidence"].includes(
+        application.complianceReview?.reviewRepurposing ?? "",
+      ),
+    );
+
+    expect(repurposingReviews.length).toBeGreaterThan(0);
+    expect(
+      repurposingReviews.every((application) =>
+        reviewRepurposingStatuses.has(application.complianceReview?.reviewRepurposing ?? ""),
+      ),
+    ).toBe(true);
+    expect(unresolvedRepurposing.length).toBeGreaterThan(0);
+
+    for (const application of unresolvedRepurposing) {
+      expect(application.status).not.toBe("approved");
+      expect(application.riskFlags).toEqual(
+        expect.arrayContaining([expect.stringMatching(/repurpos|hijack|cross-product/i)]),
+      );
+      expect(application.complianceReview?.reviewRepurposingEvidence?.join(" ")).toMatch(
+        /product|model|reviewer/i,
+      );
+      expect(application.complianceReview?.evidenceRequested).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(/provenance|matching each review|written for/i),
+          expect.stringMatching(/remove|re-collect|substantially different/i),
+        ]),
+      );
+      expect(application.complianceReview?.reviewerNote).toMatch(/repurpos/i);
     }
   });
 

@@ -16,6 +16,7 @@ export type InsiderReviewDisclosureStatus = "disclosed" | "undisclosed" | "not_a
 export type ReviewSiteIndependenceStatus = "independent" | "controlled_disclosed" | "controlled_misrepresented" | "unknown";
 export type SocialInfluenceIndicatorStatus = "verified_authentic" | "needs_evidence" | "fake_or_hijacked";
 export type SubpublisherTransparencyStatus = "full_roster" | "shared_ids_only" | "undisclosed" | "not_applicable";
+export type ReviewRepurposingStatus = "matched_to_product" | "repurposed_across_products" | "needs_evidence" | "not_applicable";
 
 export interface ComplianceReview {
   affiliateDisclosure: ComplianceCheckStatus;
@@ -37,6 +38,8 @@ export interface ComplianceReview {
   socialInfluenceEvidence?: string[];
   subpublisherTransparency?: SubpublisherTransparencyStatus;
   subpublisherEvidence?: string[];
+  reviewRepurposing?: ReviewRepurposingStatus;
+  reviewRepurposingEvidence?: string[];
   disclosurePlacement: DisclosurePlacement;
   disclosureLanguage: string;
   endorsementLanguage: string;
