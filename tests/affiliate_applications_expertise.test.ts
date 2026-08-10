@@ -14,11 +14,12 @@ const reviewSiteIndependenceStatuses = new Set(["independent", "controlled_discl
 const socialInfluenceIndicatorStatuses = new Set(["verified_authentic", "needs_evidence", "fake_or_hijacked"]);
 const subpublisherTransparencyStatuses = new Set(["full_roster", "shared_ids_only", "undisclosed", "not_applicable"]);
 const reviewRepurposingStatuses = new Set(["matched_to_product", "repurposed_across_products", "needs_evidence", "not_applicable"]);
+const disclosureSpecificityStatuses = new Set(["specific", "vague_or_ambiguous", "unknown"]);
 
 describe("affiliate applications expertise demo data", () => {
   it("contains a realistic review queue", () => {
     expect(demoApplications.length).toBeGreaterThanOrEqual(8);
-    expect(demoApplications.length).toBeLessThanOrEqual(15);
+    expect(demoApplications.length).toBeLessThanOrEqual(16);
   });
 
   it("uses supported application statuses", () => {
@@ -497,6 +498,60 @@ describe("affiliate applications expertise demo data", () => {
         expect.arrayContaining([expect.stringMatching(/translation|language/i)]),
       );
       expect(application.complianceReview?.reviewerNote).toMatch(/same language|endorsement/i);
+    }
+  });
+
+  it("keeps applicants with vague disclosure language out of approval", () => {
+    const specificityReviews = demoApplications.filter(
+      (application) => application.complianceReview?.disclosureSpecificity,
+    );
+    const vagueDisclosureApplications = specificityReviews.filter(
+      (application) => application.complianceReview?.disclosureSpecificity === "vague_or_ambiguous",
+    );
+
+    expect(specificityReviews.length).toBeGreaterThan(0);
+    expect(
+      specificityReviews.every((application) =>
+        disclosureSpecificityStatuses.has(application.complianceReview?.disclosureSpecificity ?? ""),
+      ),
+    ).toBe(true);
+    expect(vagueDisclosureApplications.length).toBeGreaterThan(0);
+
+    for (const application of vagueDisclosureApplications) {
+      expect(application.status).not.toBe("approved");
+      expect(application.riskFlags).toEqual(
+        expect.arrayContaining([expect.stringMatching(/vague|disclosure language/i)]),
+      );
+      expect(application.complianceReview?.disclosureSpecificityEvidence?.join(" ")).toMatch(
+        /#partner|#collab|#ambassador|thanks to|ambiguous/i,
+      );
+      expect(application.complianceReview?.evidenceRequested).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(/#ad|Sponsored by|Paid partnership/i),
+        ]),
+      );
+      expect(application.complianceReview?.reviewerNote).toMatch(/specific|unambiguous|clearly identifies/i);
+    }
+  });
+
+  it("requires disclosure language to be specific and clearly identify the material connection before approval", () => {
+    const reviewedApplications = demoApplications.filter((application) => application.complianceReview);
+    const unresolvedSpecificityReviews = reviewedApplications.filter(
+      (application) => application.complianceReview?.disclosureSpecificity === "vague_or_ambiguous",
+    );
+
+    expect(unresolvedSpecificityReviews.length).toBeGreaterThan(0);
+    expect(unresolvedSpecificityReviews.every((application) => application.status !== "approved")).toBe(true);
+
+    for (const application of unresolvedSpecificityReviews) {
+      expect(application.complianceReview?.affiliateDisclosure).toBe("needs_evidence");
+      expect(application.complianceReview?.disclosureSpecificityEvidence?.length ?? 0).toBeGreaterThanOrEqual(2);
+      expect(application.complianceReview?.disclosureSpecificityEvidence?.some((item) =>
+        /#partner|#collab|#ambassador|thanks/i.test(item),
+      )).toBe(true);
+      expect(application.complianceReview?.disclosureSpecificityEvidence?.some((item) =>
+        /FTC|guidance|clear.*conspicuous|standard/i.test(item),
+      )).toBe(true);
     }
   });
 
