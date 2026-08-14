@@ -130,6 +130,11 @@ function ApplicationRow({ application }: { application: AffiliateApplication }) 
                 Review repurposing: {application.complianceReview.reviewRepurposing.replaceAll("_", " ")} · {application.complianceReview.reviewRepurposingEvidence?.length ?? 0} provenance checks
               </span>
             )}
+            {application.complianceReview.disclosureExposure && (
+              <span className="block">
+                Disclosure exposure: {application.complianceReview.disclosureExposure.replaceAll("_", " ")} · {application.complianceReview.disclosureExposureEvidence?.length ?? 0} exposure checks
+              </span>
+            )}
             {application.complianceReview.liveDisclosureCadence && (
               <span className="block">Live cadence: {application.complianceReview.liveDisclosureCadence.replaceAll("_", " ")}</span>
             )}

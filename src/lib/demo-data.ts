@@ -51,7 +51,7 @@ export const demoApplications: AffiliateApplication[] = [
     reviewer: "Leah Stone",
     notes: "High traffic coupon site with possible trademark bidding overlap and unclear placement rules.",
     evidence: ["Coupon landing page", "Search ad screenshots", "Domain ownership record"],
-    riskFlags: ["Trademark overlap", "High incentive traffic", "Undisclosed subpublisher traffic"],
+    riskFlags: ["Trademark overlap", "High incentive traffic", "Undisclosed subpublisher traffic", "Elevated disclosure penalty exposure"],
     complianceReview: {
       affiliateDisclosure: "needs_evidence",
       aiContentLabeling: "verified",
@@ -60,6 +60,11 @@ export const demoApplications: AffiliateApplication[] = [
       subpublisherEvidence: [
         "Application reports aggregate coupon traffic but does not identify the underlying subpublishers",
         "Sample transaction export omits stable subpublisher IDs and referring publisher URLs",
+      ],
+      disclosureExposure: "elevated",
+      disclosureExposureEvidence: [
+        "Coupon inventory crawl shows no affiliate disclosure on 87 percent of live deal and code pages",
+        "Roughly 150,000 monthly visitors reach undisclosed pages where each non-compliant placement can be counted as a separate violation under current enforcement guidance",
       ],
       disclosurePlacement: "missing",
       disclosureLanguage: "Submitted coupon pages do not show where the affiliate relationship is disclosed to German-language visitors.",
@@ -70,9 +75,11 @@ export const demoApplications: AffiliateApplication[] = [
         "Complete active subpublisher roster with stable IDs, names, and referring URLs",
         "Click and conversion export carrying the same subpublisher ID through attribution",
         "Named owner and removal workflow for unidentified or prohibited subpublishers",
+        "Complete live-content inventory reconciling every coupon and deal page to its disclosure status",
+        "Retroactive disclosure remediation plan with a re-crawl verification report across affected pages",
       ],
       lastCheckedAt: "2026-06-10T11:20:00Z",
-      reviewerNote: "Do not approve until publisher-level identity persists from the active roster through click and conversion reporting.",
+      reviewerNote: "Do not approve until publisher-level identity persists from the active roster through click and conversion reporting and the undisclosed coupon inventory is remediated.",
     },
   },
   {
@@ -145,6 +152,11 @@ export const demoApplications: AffiliateApplication[] = [
         "Approved-claims and clear-disclosure training issued before campaign launch",
         "Monthly caption and transcript monitoring schedule",
         "Correction and escalation log for questionable posts",
+      ],
+      disclosureExposure: "low",
+      disclosureExposureEvidence: [
+        "Quarterly live-content inventory reconciles every sponsored post to its approved disclosure screenshot",
+        "Last crawl found zero live placements without the material-connection notice",
       ],
       disclosurePlacement: "with_endorsement",
       disclosureLanguage: "#ad appears in the first two caption lines and is spoken in the sponsored reel intro.",

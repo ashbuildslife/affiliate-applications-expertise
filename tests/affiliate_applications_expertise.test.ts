@@ -15,6 +15,7 @@ const socialInfluenceIndicatorStatuses = new Set(["verified_authentic", "needs_e
 const subpublisherTransparencyStatuses = new Set(["full_roster", "shared_ids_only", "undisclosed", "not_applicable"]);
 const reviewRepurposingStatuses = new Set(["matched_to_product", "repurposed_across_products", "needs_evidence", "not_applicable"]);
 const disclosureSpecificityStatuses = new Set(["specific", "vague_or_ambiguous", "unknown"]);
+const disclosureExposureAssessments = new Set(["low", "elevated", "needs_assessment"]);
 
 describe("affiliate applications expertise demo data", () => {
   it("contains a realistic review queue", () => {
@@ -552,6 +553,54 @@ describe("affiliate applications expertise demo data", () => {
       expect(application.complianceReview?.disclosureSpecificityEvidence?.some((item) =>
         /FTC|guidance|clear.*conspicuous|standard/i.test(item),
       )).toBe(true);
+    }
+  });
+
+  it("keeps applications with elevated or unassessed disclosure exposure out of approval", () => {
+    const exposureReviews = demoApplications.filter(
+      (application) => application.complianceReview?.disclosureExposure,
+    );
+    const unresolvedExposureReviews = exposureReviews.filter((application) =>
+      ["elevated", "needs_assessment"].includes(application.complianceReview?.disclosureExposure ?? ""),
+    );
+
+    expect(exposureReviews.length).toBeGreaterThanOrEqual(2);
+    expect(
+      exposureReviews.every((application) =>
+        disclosureExposureAssessments.has(application.complianceReview?.disclosureExposure ?? ""),
+      ),
+    ).toBe(true);
+    expect(unresolvedExposureReviews.length).toBeGreaterThan(0);
+
+    for (const application of unresolvedExposureReviews) {
+      expect(application.status).not.toBe("approved");
+      expect(application.riskFlags).toEqual(
+        expect.arrayContaining([expect.stringMatching(/exposure|penalty|undisclosed/i)]),
+      );
+      expect(application.complianceReview?.disclosureExposureEvidence?.join(" ")).toMatch(
+        /inventory|crawl|pages|posts|placement|visitor/i,
+      );
+      expect(application.complianceReview?.evidenceRequested).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(/inventory|reconcil|disclosure status/i),
+          expect.stringMatching(/retroactive|remediation|re-crawl|verification/i),
+        ]),
+      );
+    }
+  });
+
+  it("requires a reconciled live-content inventory before treating disclosure exposure as low", () => {
+    const lowExposureApplications = demoApplications.filter(
+      (application) => application.complianceReview?.disclosureExposure === "low",
+    );
+
+    expect(lowExposureApplications.length).toBeGreaterThan(0);
+
+    for (const application of lowExposureApplications) {
+      const exposureEvidence = application.complianceReview?.disclosureExposureEvidence?.join(" ") ?? "";
+      expect(application.complianceReview?.affiliateDisclosure).toBe("verified");
+      expect(exposureEvidence).toMatch(/inventory|reconcil|crawl/i);
+      expect(exposureEvidence).toMatch(/zero|no live|disclosure screenshot|100 percent/i);
     }
   });
 
