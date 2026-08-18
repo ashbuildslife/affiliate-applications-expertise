@@ -16,6 +16,7 @@ const subpublisherTransparencyStatuses = new Set(["full_roster", "shared_ids_onl
 const reviewRepurposingStatuses = new Set(["matched_to_product", "repurposed_across_products", "needs_evidence", "not_applicable"]);
 const disclosureSpecificityStatuses = new Set(["specific", "vague_or_ambiguous", "unknown"]);
 const disclosureExposureAssessments = new Set(["low", "elevated", "needs_assessment"]);
+const earningsClaimReviewStatuses = new Set(["substantiated", "unsubstantiated", "typical_results_omitted", "not_applicable"]);
 
 describe("affiliate applications expertise demo data", () => {
   it("contains a realistic review queue", () => {
@@ -601,6 +602,57 @@ describe("affiliate applications expertise demo data", () => {
       expect(application.complianceReview?.affiliateDisclosure).toBe("verified");
       expect(exposureEvidence).toMatch(/inventory|reconcil|crawl/i);
       expect(exposureEvidence).toMatch(/zero|no live|disclosure screenshot|100 percent/i);
+    }
+  });
+
+  it("keeps unsubstantiated income claims out of approval", () => {
+    const earningsReviews = demoApplications.filter(
+      (application) => application.complianceReview?.earningsClaimReview,
+    );
+    const unresolvedEarningsReviews = earningsReviews.filter((application) =>
+      ["unsubstantiated", "typical_results_omitted"].includes(
+        application.complianceReview?.earningsClaimReview ?? "",
+      ),
+    );
+
+    expect(earningsReviews.length).toBeGreaterThanOrEqual(2);
+    expect(
+      earningsReviews.every((application) =>
+        earningsClaimReviewStatuses.has(application.complianceReview?.earningsClaimReview ?? ""),
+      ),
+    ).toBe(true);
+    expect(unresolvedEarningsReviews.length).toBeGreaterThan(0);
+
+    for (const application of unresolvedEarningsReviews) {
+      expect(application.status).not.toBe("approved");
+      expect(application.riskFlags).toEqual(
+        expect.arrayContaining([expect.stringMatching(/income|earnings|claims/i)]),
+      );
+      expect(application.complianceReview?.earningsClaimEvidence?.join(" ")).toMatch(
+        /screenshot|payout|income|earn/i,
+      );
+      expect(application.complianceReview?.evidenceRequested).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(/payout|statement|verification|substantiat/i),
+          expect.stringMatching(/typical|results|disclosure/i),
+        ]),
+      );
+      expect(application.complianceReview?.reviewerNote).toMatch(/earnings|income|claim/i);
+    }
+  });
+
+  it("requires payout evidence and a typical-results disclosure before treating earnings claims as substantiated", () => {
+    const substantiatedEarningsReviews = demoApplications.filter(
+      (application) => application.complianceReview?.earningsClaimReview === "substantiated",
+    );
+
+    expect(substantiatedEarningsReviews.length).toBeGreaterThan(0);
+
+    for (const application of substantiatedEarningsReviews) {
+      const earningsEvidence = application.complianceReview?.earningsClaimEvidence?.join(" ") ?? "";
+      expect(application.status).toBe("approved");
+      expect(earningsEvidence).toMatch(/payout|statement|12 months/i);
+      expect(earningsEvidence).toMatch(/typical|most partners|disclosure/i);
     }
   });
 

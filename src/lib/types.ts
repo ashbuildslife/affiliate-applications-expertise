@@ -19,11 +19,14 @@ export type SocialInfluenceIndicatorStatus = "verified_authentic" | "needs_evide
 export type SubpublisherTransparencyStatus = "full_roster" | "shared_ids_only" | "undisclosed" | "not_applicable";
 export type ReviewRepurposingStatus = "matched_to_product" | "repurposed_across_products" | "needs_evidence" | "not_applicable";
 export type DisclosureExposureAssessment = "low" | "elevated" | "needs_assessment";
+export type EarningsClaimReviewStatus = "substantiated" | "unsubstantiated" | "typical_results_omitted" | "not_applicable";
 
 export interface ComplianceReview {
   affiliateDisclosure: ComplianceCheckStatus;
   aiContentLabeling: ComplianceCheckStatus;
   claimSubstantiation: ComplianceCheckStatus;
+  earningsClaimReview?: EarningsClaimReviewStatus;
+  earningsClaimEvidence?: string[];
   testimonialAuthenticity?: TestimonialAuthenticityStatus;
   testimonialExperienceEvidence?: string[];
   endorserMonitoringReadiness?: EndorserMonitoringReadiness;

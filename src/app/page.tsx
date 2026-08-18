@@ -135,6 +135,11 @@ function ApplicationRow({ application }: { application: AffiliateApplication }) 
                 Disclosure exposure: {application.complianceReview.disclosureExposure.replaceAll("_", " ")} · {application.complianceReview.disclosureExposureEvidence?.length ?? 0} exposure checks
               </span>
             )}
+            {application.complianceReview.earningsClaimReview && (
+              <span className="block">
+                Earnings claims: {application.complianceReview.earningsClaimReview.replaceAll("_", " ")} · {application.complianceReview.earningsClaimEvidence?.length ?? 0} evidence checks
+              </span>
+            )}
             {application.complianceReview.liveDisclosureCadence && (
               <span className="block">Live cadence: {application.complianceReview.liveDisclosureCadence.replaceAll("_", " ")}</span>
             )}
