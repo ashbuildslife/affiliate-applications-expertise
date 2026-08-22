@@ -140,6 +140,11 @@ function ApplicationRow({ application }: { application: AffiliateApplication }) 
                 Earnings claims: {application.complianceReview.earningsClaimReview.replaceAll("_", " ")} · {application.complianceReview.earningsClaimEvidence?.length ?? 0} evidence checks
               </span>
             )}
+            {application.complianceReview.publishedContentStatus && (
+              <span className="block">
+                Published content: {application.complianceReview.publishedContentStatus.replaceAll("_", " ")} · {application.complianceReview.publishedContentEvidence?.length ?? 0} snapshot checks
+              </span>
+            )}
             {application.complianceReview.liveDisclosureCadence && (
               <span className="block">Live cadence: {application.complianceReview.liveDisclosureCadence.replaceAll("_", " ")}</span>
             )}

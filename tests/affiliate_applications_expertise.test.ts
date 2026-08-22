@@ -17,6 +17,7 @@ const reviewRepurposingStatuses = new Set(["matched_to_product", "repurposed_acr
 const disclosureSpecificityStatuses = new Set(["specific", "vague_or_ambiguous", "unknown"]);
 const disclosureExposureAssessments = new Set(["low", "elevated", "needs_assessment"]);
 const earningsClaimReviewStatuses = new Set(["substantiated", "unsubstantiated", "typical_results_omitted", "not_applicable"]);
+const publishedContentStatuses = new Set(["matches_approved", "drift_detected", "not_reviewed"]);
 
 describe("affiliate applications expertise demo data", () => {
   it("contains a realistic review queue", () => {
@@ -653,6 +654,49 @@ describe("affiliate applications expertise demo data", () => {
       expect(application.status).toBe("approved");
       expect(earningsEvidence).toMatch(/payout|statement|12 months/i);
       expect(earningsEvidence).toMatch(/typical|most partners|disclosure/i);
+    }
+  });
+
+  it("keeps published content drift out of approval", () => {
+    const reviewedApplications = demoApplications.filter(
+      (application) => application.complianceReview?.publishedContentStatus,
+    );
+    const driftedApplications = reviewedApplications.filter(
+      (application) => application.complianceReview?.publishedContentStatus === "drift_detected",
+    );
+
+    expect(reviewedApplications.length).toBeGreaterThanOrEqual(2);
+    expect(
+      reviewedApplications.every((application) =>
+        publishedContentStatuses.has(application.complianceReview?.publishedContentStatus ?? ""),
+      ),
+    ).toBe(true);
+    expect(driftedApplications.length).toBeGreaterThan(0);
+
+    for (const application of driftedApplications) {
+      const review = application.complianceReview;
+      expect(application.status).not.toBe("approved");
+      expect(application.riskFlags).toEqual(expect.arrayContaining([expect.stringMatching(/drift|live/i)]));
+      expect(review?.publishedContentEvidence?.join(" ")).toMatch(/approved|live|snapshot|replay|baseline/i);
+      expect(review?.evidenceRequested).toEqual(
+        expect.arrayContaining([expect.stringMatching(/snapshot|baseline|re-review|published/i)]),
+      );
+      expect(review?.reviewerNote).toMatch(/drift|approved|live|re-review/i);
+    }
+  });
+
+  it("requires archived evidence before treating published content as matched", () => {
+    const matchedApplications = demoApplications.filter(
+      (application) => application.complianceReview?.publishedContentStatus === "matches_approved",
+    );
+
+    expect(matchedApplications.length).toBeGreaterThan(0);
+
+    for (const application of matchedApplications) {
+      const evidence = application.complianceReview?.publishedContentEvidence?.join(" ") ?? "";
+      expect(application.status).toBe("approved");
+      expect(evidence).toMatch(/archived|snapshot|crawl/i);
+      expect(evidence).toMatch(/approved|baseline|match/i);
     }
   });
 

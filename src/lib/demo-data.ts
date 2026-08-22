@@ -152,6 +152,11 @@ export const demoApplications: AffiliateApplication[] = [
         "Published income screenshots are backed by 12 months of creator payout statements reviewed against the claimed amounts",
         "Every earnings post carries a typical-results disclosure stating that most partners earn less than the featured result",
       ],
+      publishedContentStatus: "matches_approved",
+      publishedContentEvidence: [
+        "Monthly live-page crawl preserves an archived screenshot and compares the CTA, disclosure, and claim copy with the approved review baseline",
+        "June replay matched the approved caption and landing-page version with no post-publication edits requiring remediation",
+      ],
       endorserMonitoringReadiness: "documented",
       endorserMonitoringEvidence: [
         "Approved-claims and clear-disclosure training issued before campaign launch",
@@ -375,7 +380,7 @@ export const demoApplications: AffiliateApplication[] = [
     reviewer: "Compliance bot",
     notes: "Live-shopping host has strong audience fit, but disclosure appeared only in the opening segment instead of being repeated for mid-stream viewers, and on-stream income claims are not backed by payout evidence.",
     evidence: ["Live stream transcript", "Creator media kit", "Paid partnership label export"],
-    riskFlags: ["Live stream disclosure cadence", "Unsubstantiated income claims"],
+    riskFlags: ["Live stream disclosure cadence", "Unsubstantiated income claims", "Approved/live content drift"],
     complianceReview: {
       affiliateDisclosure: "needs_evidence",
       aiContentLabeling: "verified",
@@ -384,6 +389,11 @@ export const demoApplications: AffiliateApplication[] = [
       earningsClaimEvidence: [
         "Host flashes a phone screenshot claiming 8,000 USD in monthly affiliate income without linking it to any payout statement",
         "No typical-results disclosure accompanies the income claim, so viewers cannot see the earnings most partners actually receive",
+      ],
+      publishedContentStatus: "drift_detected",
+      publishedContentEvidence: [
+        "Approved campaign script contains a repeated disclosure and capped earnings claim, but the live replay uses an edited hook and the disclosure appears only at 00:12",
+        "Archived live snapshot does not match the submitted approval baseline, so the changed copy requires re-review before traffic resumes",
       ],
       disclosurePlacement: "with_endorsement",
       disclosureLanguage: "Sponsor language appears in the opening slate, but the product endorsement continues for 31 minutes without repeated notice.",
@@ -397,9 +407,10 @@ export const demoApplications: AffiliateApplication[] = [
         "Platform paid partnership label export",
         "Payout statement or third-party verification substantiating the on-stream income claim",
         "Typical-results disclosure wording published with every income or earnings claim",
+        "Archived live snapshot compared with the approved campaign script and re-review disposition for any changed copy",
       ],
       lastCheckedAt: "2026-06-07T18:05:00Z",
-      reviewerNote: "Hold approval until recurring spoken or visual disclosure cadence is proven for viewers joining after the opening segment and the on-stream income claim is substantiated with payout evidence and a typical-results disclosure.",
+      reviewerNote: "Hold approval until recurring spoken or visual disclosure cadence is proven for viewers joining after the opening segment, the live copy is reconciled to the approved baseline, and the on-stream income claim is substantiated with payout evidence and a typical-results disclosure.",
     },
   },
   {

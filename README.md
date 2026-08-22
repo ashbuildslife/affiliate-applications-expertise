@@ -35,6 +35,7 @@ All records are fictional. The goal is to show product judgment and engineering 
 - **Partner tiering:** Commission recommendations tied to quality thresholds, payout holds, cookie windows, and compliance rules.
 - **Fraud and policy review:** High confidence risk signals for trademark bidding, attribution abuse, domain mismatch, and traffic anomalies.
 - **Payout safeguards:** Rule-based holds and release criteria for coupon partners, paid search partners, and high value approvals.
+- **Published-content drift review:** Archived live snapshots compare creator copy with the approved baseline before traffic is resumed.
 - **Executive analytics:** Review speed, approval rate, projected revenue, payout exposure, and automated review coverage.
 - **Activity timeline:** Mixed AI, manual, compliance, payout, and approval events for realistic program operations.
 
