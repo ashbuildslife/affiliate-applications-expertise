@@ -92,7 +92,7 @@ function ApplicationRow({ application }: { application: AffiliateApplication }) 
             )}
             {application.complianceReview.endorserMonitoringReadiness && (
               <span className="block">
-                Monitoring readiness: {application.complianceReview.endorserMonitoringReadiness.replaceAll("_", " ")} · {application.complianceReview.endorserMonitoringEvidence?.length ?? 0} control records
+                Monitoring readiness: {application.complianceReview.endorserMonitoringReadiness.replaceAll("_", " ")} · {application.complianceReview.endorserMonitoringEvidence?.length ?? 0} control records{application.complianceReview.endorserMonitoringLastRunAt ? ` · last run ${application.complianceReview.endorserMonitoringLastRunAt.slice(0, 10)}` : ""}
               </span>
             )}
             {application.complianceReview.reviewIncentivePolicy && (

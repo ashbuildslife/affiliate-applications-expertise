@@ -403,6 +403,23 @@ describe("affiliate applications expertise demo data", () => {
     }
   });
 
+  it("requires a completed monitoring run for documented endorser controls", () => {
+    const documentedMonitoringReviews = demoApplications.filter(
+      (application) => application.complianceReview?.endorserMonitoringReadiness === "documented",
+    );
+
+    expect(documentedMonitoringReviews.length).toBeGreaterThan(0);
+
+    for (const application of documentedMonitoringReviews) {
+      const review = application.complianceReview;
+      expect(review?.endorserMonitoringLastRunAt).toBeDefined();
+      expect(Number.isNaN(Date.parse(review?.endorserMonitoringLastRunAt ?? ""))).toBe(false);
+      expect(new Date(review?.endorserMonitoringLastRunAt ?? "").getTime()).toBeLessThanOrEqual(
+        new Date(review?.lastCheckedAt ?? "").getTime(),
+      );
+    }
+  });
+
   it("captures hard-to-miss disclosure placement evidence", () => {
     const reviewedApplications = demoApplications.filter((application) => application.complianceReview);
 

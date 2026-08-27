@@ -36,6 +36,7 @@ All records are fictional. The goal is to show product judgment and engineering 
 - **Fraud and policy review:** High confidence risk signals for trademark bidding, attribution abuse, domain mismatch, and traffic anomalies.
 - **Payout safeguards:** Rule-based holds and release criteria for coupon partners, paid search partners, and high value approvals.
 - **Published-content drift review:** Archived live snapshots compare creator copy with the approved baseline before traffic is resumed.
+- **Endorser monitoring evidence:** The review queue distinguishes a documented training program from a completed monitoring run and corrective-action record.
 - **Executive analytics:** Review speed, approval rate, projected revenue, payout exposure, and automated review coverage.
 - **Activity timeline:** Mixed AI, manual, compliance, payout, and approval events for realistic program operations.
 
@@ -88,7 +89,7 @@ npm run build
 
 ## Demo data
 
-The dataset includes 10 fictional affiliate applications across content, paid search, influencer, newsletter, coupon, and B2B channels. It also includes program tiers, fraud signals, payout control rules, analytics, and activity events.
+The dataset includes 16 fictional affiliate applications across content, paid search, influencer, newsletter, coupon, and B2B channels. It also includes program tiers, fraud signals, payout control rules, analytics, and activity events.
 
 The data is designed to reflect common affiliate program operating problems:
 

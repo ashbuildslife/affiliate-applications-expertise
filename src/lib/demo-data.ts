@@ -163,6 +163,7 @@ export const demoApplications: AffiliateApplication[] = [
         "Monthly caption and transcript monitoring schedule",
         "Correction and escalation log for questionable posts",
       ],
+      endorserMonitoringLastRunAt: "2026-05-31T15:00:00Z",
       disclosureExposure: "low",
       disclosureExposureEvidence: [
         "Quarterly live-content inventory reconciles every sponsored post to its approved disclosure screenshot",

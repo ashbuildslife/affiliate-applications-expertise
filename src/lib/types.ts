@@ -34,6 +34,7 @@ export interface ComplianceReview {
   testimonialExperienceEvidence?: string[];
   endorserMonitoringReadiness?: EndorserMonitoringReadiness;
   endorserMonitoringEvidence?: string[];
+  endorserMonitoringLastRunAt?: string;
   reviewIncentivePolicy?: ReviewIncentivePolicy;
   reviewIncentiveEvidence?: string[];
   reviewSuppressionPolicy?: ReviewSuppressionPolicy;
