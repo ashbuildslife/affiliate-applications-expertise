@@ -20,6 +20,7 @@ export type SubpublisherTransparencyStatus = "full_roster" | "shared_ids_only" |
 export type ReviewRepurposingStatus = "matched_to_product" | "repurposed_across_products" | "needs_evidence" | "not_applicable";
 export type DisclosureExposureAssessment = "low" | "elevated" | "needs_assessment";
 export type EarningsClaimReviewStatus = "substantiated" | "unsubstantiated" | "typical_results_omitted" | "not_applicable";
+export type SyntheticEndorserReviewStatus = "authorized_and_disclosed" | "permission_missing" | "misrepresented_as_human" | "not_applicable";
 export type PublishedContentStatus = "matches_approved" | "drift_detected" | "not_reviewed";
 
 export interface ComplianceReview {
@@ -32,6 +33,8 @@ export interface ComplianceReview {
   publishedContentEvidence?: string[];
   testimonialAuthenticity?: TestimonialAuthenticityStatus;
   testimonialExperienceEvidence?: string[];
+  syntheticEndorserReview?: SyntheticEndorserReviewStatus;
+  syntheticEndorserEvidence?: string[];
   endorserMonitoringReadiness?: EndorserMonitoringReadiness;
   endorserMonitoringEvidence?: string[];
   endorserMonitoringLastRunAt?: string;

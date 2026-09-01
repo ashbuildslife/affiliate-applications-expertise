@@ -37,6 +37,7 @@ All records are fictional. The goal is to show product judgment and engineering 
 - **Payout safeguards:** Rule-based holds and release criteria for coupon partners, paid search partners, and high value approvals.
 - **Published-content drift review:** Archived live snapshots compare creator copy with the approved baseline before traffic is resumed.
 - **Endorser monitoring evidence:** The review queue distinguishes a documented training program from a completed monitoring run and corrective-action record.
+- **Synthetic endorser review:** Separates authorized and disclosed virtual personas from missing likeness permission or false real-user presentation before approval.
 - **Executive analytics:** Review speed, approval rate, projected revenue, payout exposure, and automated review coverage.
 - **Activity timeline:** Mixed AI, manual, compliance, payout, and approval events for realistic program operations.
 
@@ -97,6 +98,7 @@ The data is designed to reflect common affiliate program operating problems:
 - Coupon and extension partners that require payout holds
 - Paid search partners that need keyword policy enforcement
 - Domain mismatch and traffic spike fraud indicators
+- AI-generated endorser personas that require likeness permission and clear audience disclosure
 - Commission requests that need tier based governance
 
 ## Production roadmap

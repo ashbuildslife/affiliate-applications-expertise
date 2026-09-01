@@ -17,6 +17,7 @@ const reviewRepurposingStatuses = new Set(["matched_to_product", "repurposed_acr
 const disclosureSpecificityStatuses = new Set(["specific", "vague_or_ambiguous", "unknown"]);
 const disclosureExposureAssessments = new Set(["low", "elevated", "needs_assessment"]);
 const earningsClaimReviewStatuses = new Set(["substantiated", "unsubstantiated", "typical_results_omitted", "not_applicable"]);
+const syntheticEndorserReviewStatuses = new Set(["authorized_and_disclosed", "permission_missing", "misrepresented_as_human", "not_applicable"]);
 const publishedContentStatuses = new Set(["matches_approved", "drift_detected", "not_reviewed"]);
 
 describe("affiliate applications expertise demo data", () => {
@@ -671,6 +672,56 @@ describe("affiliate applications expertise demo data", () => {
       expect(application.status).toBe("approved");
       expect(earningsEvidence).toMatch(/payout|statement|12 months/i);
       expect(earningsEvidence).toMatch(/typical|most partners|disclosure/i);
+    }
+  });
+
+  it("holds synthetic endorsers until permission and audience representation are verified", () => {
+    const syntheticPersonaApplications = demoApplications.filter(
+      (application) => application.complianceReview?.syntheticEndorserReview,
+    );
+    const unresolvedSyntheticPersonas = syntheticPersonaApplications.filter((application) =>
+      ["permission_missing", "misrepresented_as_human"].includes(
+        application.complianceReview?.syntheticEndorserReview ?? "",
+      ),
+    );
+
+    expect(syntheticPersonaApplications.length).toBeGreaterThan(0);
+    expect(
+      syntheticPersonaApplications.every((application) =>
+        syntheticEndorserReviewStatuses.has(application.complianceReview?.syntheticEndorserReview ?? ""),
+      ),
+    ).toBe(true);
+    expect(unresolvedSyntheticPersonas.length).toBeGreaterThan(0);
+
+    for (const application of unresolvedSyntheticPersonas) {
+      expect(application.status).not.toBe("approved");
+      expect(application.riskFlags).toEqual(
+        expect.arrayContaining([expect.stringMatching(/synthetic|AI-generated|likeness/i)]),
+      );
+      expect(application.complianceReview?.syntheticEndorserEvidence?.join(" ")).toMatch(
+        /permission|consent|likeness|generated|avatar|real/i,
+      );
+      expect(application.complianceReview?.evidenceRequested).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(/permission|consent|likeness/i),
+          expect.stringMatching(/disclos|virtual|generated|actual user/i),
+        ]),
+      );
+    }
+  });
+
+  it("keeps approved synthetic endorsers tied to authorization and disclosure evidence", () => {
+    const approvedSyntheticPersonas = demoApplications.filter(
+      (application) => application.complianceReview?.syntheticEndorserReview === "authorized_and_disclosed",
+    );
+
+    expect(approvedSyntheticPersonas.length).toBeGreaterThan(0);
+
+    for (const application of approvedSyntheticPersonas) {
+      const review = application.complianceReview;
+      expect(application.status).toBe("approved");
+      expect(review?.syntheticEndorserEvidence?.join(" ")).toMatch(/permission|consent|authorized/i);
+      expect(review?.syntheticEndorserEvidence?.join(" ")).toMatch(/disclos|virtual|generated/i);
     }
   });
 
