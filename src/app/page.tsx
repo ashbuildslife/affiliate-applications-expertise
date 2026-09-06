@@ -95,6 +95,11 @@ function ApplicationRow({ application }: { application: AffiliateApplication }) 
                 Synthetic endorser: {application.complianceReview.syntheticEndorserReview.replaceAll("_", " ")} · {application.complianceReview.syntheticEndorserEvidence?.length ?? 0} evidence checks
               </span>
             )}
+            {application.complianceReview.childAudienceReview && (
+              <span className="block">
+                Child-audience disclosure: {application.complianceReview.childAudienceReview.replaceAll("_", " ")} · {application.complianceReview.childAudienceEvidence?.length ?? 0} evidence checks
+              </span>
+            )}
             {application.complianceReview.endorserMonitoringReadiness && (
               <span className="block">
                 Monitoring readiness: {application.complianceReview.endorserMonitoringReadiness.replaceAll("_", " ")} · {application.complianceReview.endorserMonitoringEvidence?.length ?? 0} control records{application.complianceReview.endorserMonitoringLastRunAt ? ` · last run ${application.complianceReview.endorserMonitoringLastRunAt.slice(0, 10)}` : ""}

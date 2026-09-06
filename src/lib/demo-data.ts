@@ -157,6 +157,11 @@ export const demoApplications: AffiliateApplication[] = [
         "Virtual co-host likeness and voice permission are recorded for the campaign asset before paid placement",
         "Campaign captions disclose the generated virtual host and do not imply that a real person independently used the product",
       ],
+      childAudienceReview: "child_audience_reviewed",
+      childAudienceEvidence: [
+        "Campaign inventory separates general-audience and child-directed placements before each endorsement is approved",
+        "Child-directed videos carry a plain-language material-connection notice in both the spoken endorsement and on-screen caption",
+      ],
       publishedContentStatus: "matches_approved",
       publishedContentEvidence: [
         "Monthly live-page crawl preserves an archived screenshot and compares the CTA, disclosure, and claim copy with the approved review baseline",
@@ -474,7 +479,7 @@ export const demoApplications: AffiliateApplication[] = [
     reviewer: "Compliance bot",
     notes: "Creator has a visible platform paid-partnership tag, but the caption and voiceover do not independently state the affiliate relationship.",
     evidence: ["Platform paid partnership label export", "Caption screenshot", "Short-form video transcript"],
-    riskFlags: ["Platform label only disclosure", "Missing affiliate disclosure", "Monitoring plan missing", "Fake social influence indicators", "Synthetic endorser likeness review"],
+    riskFlags: ["Platform label only disclosure", "Missing affiliate disclosure", "Monitoring plan missing", "Fake social influence indicators", "Synthetic endorser likeness review", "Child-directed endorsement disclosure review"],
     complianceReview: {
       affiliateDisclosure: "needs_evidence",
       aiContentLabeling: "verified",
@@ -483,6 +488,11 @@ export const demoApplications: AffiliateApplication[] = [
       syntheticEndorserEvidence: [
         "Video uses an AI-generated face and voice, but the application packet has no consent or likeness permission record for the represented person",
         "Landing page presents the generated host as an independent product user without disclosing the virtual persona or clarifying that no human endorser used the product",
+      ],
+      childAudienceReview: "disclosure_not_child_appropriate",
+      childAudienceEvidence: [
+        "Media kit targets a child-heavy gaming audience, but the paid partnership tag is the only material-connection cue visible in the endorsement",
+        "The caption and voiceover were not tested for clear, understandable disclosure treatment for younger viewers",
       ],
       endorserMonitoringReadiness: "missing",
       socialInfluenceIndicators: "fake_or_hijacked",
@@ -505,11 +515,13 @@ export const demoApplications: AffiliateApplication[] = [
         "Vendor contract and invoice history for follower, view, and engagement growth",
         "Account-level audit separating real users from bots, hijacked accounts, and non-person accounts",
         "Corrected media kit and post-cleanup audience metrics excluding fake indicators",
+        "Audience composition and targeting evidence identifying child-directed placements",
+        "Child-directed disclosure review showing understandable, visible, and audible material-connection language",
         "Likeness permission or consent record for the AI-generated face and voice used in the campaign",
         "Clear disclosure that the virtual host is generated and not an actual product user",
       ],
       lastCheckedAt: "2026-06-09T10:25:00Z",
-      reviewerNote: "Do not approve from platform label evidence alone; require the creator's own clear disclosure, a documented monitoring workflow, likeness permission for any synthetic endorser, and proof that commercial influence metrics exclude purchased fake or hijacked accounts.",
+      reviewerNote: "Do not approve from platform label evidence alone; require the creator's own clear disclosure, a documented monitoring workflow, likeness permission for any synthetic endorser, child-directed audience assessment and disclosure treatment, and proof that commercial influence metrics exclude purchased fake or hijacked accounts.",
     },
   },
   {

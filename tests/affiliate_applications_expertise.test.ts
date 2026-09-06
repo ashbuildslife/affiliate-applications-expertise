@@ -18,6 +18,7 @@ const disclosureSpecificityStatuses = new Set(["specific", "vague_or_ambiguous",
 const disclosureExposureAssessments = new Set(["low", "elevated", "needs_assessment"]);
 const earningsClaimReviewStatuses = new Set(["substantiated", "unsubstantiated", "typical_results_omitted", "not_applicable"]);
 const syntheticEndorserReviewStatuses = new Set(["authorized_and_disclosed", "permission_missing", "misrepresented_as_human", "not_applicable"]);
+const childAudienceReviewStatuses = new Set(["not_applicable", "needs_audience_assessment", "disclosure_not_child_appropriate", "child_audience_reviewed"]);
 const publishedContentStatuses = new Set(["matches_approved", "drift_detected", "not_reviewed"]);
 
 describe("affiliate applications expertise demo data", () => {
@@ -672,6 +673,57 @@ describe("affiliate applications expertise demo data", () => {
       expect(application.status).toBe("approved");
       expect(earningsEvidence).toMatch(/payout|statement|12 months/i);
       expect(earningsEvidence).toMatch(/typical|most partners|disclosure/i);
+    }
+  });
+
+  it("keeps child-directed endorsements out of approval until audience-specific disclosure is reviewed", () => {
+    const childAudienceReviews = demoApplications.filter(
+      (application) => application.complianceReview?.childAudienceReview,
+    );
+    const unresolvedChildAudienceReviews = childAudienceReviews.filter((application) =>
+      ["needs_audience_assessment", "disclosure_not_child_appropriate"].includes(
+        application.complianceReview?.childAudienceReview ?? "",
+      ),
+    );
+
+    expect(childAudienceReviews.length).toBeGreaterThan(0);
+    expect(
+      childAudienceReviews.every((application) =>
+        childAudienceReviewStatuses.has(application.complianceReview?.childAudienceReview ?? ""),
+      ),
+    ).toBe(true);
+    expect(unresolvedChildAudienceReviews.length).toBeGreaterThan(0);
+
+    for (const application of unresolvedChildAudienceReviews) {
+      expect(application.status).not.toBe("approved");
+      expect(application.riskFlags).toEqual(
+        expect.arrayContaining([expect.stringMatching(/child|children|youth|audience/i)]),
+      );
+      expect(application.complianceReview?.childAudienceEvidence?.join(" ")).toMatch(
+        /child|children|audience|disclos/i,
+      );
+      expect(application.complianceReview?.evidenceRequested).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(/audience|child|age/i),
+          expect.stringMatching(/disclos|visual|audible|understand/i),
+        ]),
+      );
+      expect(application.complianceReview?.reviewerNote).toMatch(/child|audience/i);
+    }
+  });
+
+  it("requires audience-specific disclosure evidence before approving child-directed endorsements", () => {
+    const reviewedChildAudienceApplications = demoApplications.filter(
+      (application) => application.complianceReview?.childAudienceReview === "child_audience_reviewed",
+    );
+
+    expect(reviewedChildAudienceApplications.length).toBeGreaterThan(0);
+
+    for (const application of reviewedChildAudienceApplications) {
+      const evidence = application.complianceReview?.childAudienceEvidence?.join(" ") ?? "";
+      expect(application.status).toBe("approved");
+      expect(evidence).toMatch(/audience|placement|inventory/i);
+      expect(evidence).toMatch(/spoken|on-screen|caption|visual|audible|understand/i);
     }
   });
 
