@@ -90,6 +90,11 @@ function ApplicationRow({ application }: { application: AffiliateApplication }) 
                 Testimonial experience: {application.complianceReview.testimonialAuthenticity.replaceAll("_", " ")} · {application.complianceReview.testimonialExperienceEvidence?.length ?? 0} evidence checks
               </span>
             )}
+            {application.complianceReview.endorsementRecency && (
+              <span className="block">
+                Endorsement recency: {application.complianceReview.endorsementRecency.replaceAll("_", " ")} · {application.complianceReview.endorsementRecencyEvidence?.length ?? 0} evidence checks
+              </span>
+            )}
             {application.complianceReview.syntheticEndorserReview && (
               <span className="block">
                 Synthetic endorser: {application.complianceReview.syntheticEndorserReview.replaceAll("_", " ")} · {application.complianceReview.syntheticEndorserEvidence?.length ?? 0} evidence checks

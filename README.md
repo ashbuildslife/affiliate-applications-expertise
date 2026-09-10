@@ -36,6 +36,7 @@ All records are fictional. The goal is to show product judgment and engineering 
 - **Fraud and policy review:** High confidence risk signals for trademark bidding, attribution abuse, domain mismatch, and traffic anomalies.
 - **Payout safeguards:** Rule-based holds and release criteria for coupon partners, paid search partners, and high value approvals.
 - **Published-content drift review:** Archived live snapshots compare creator copy with the approved baseline before traffic is resumed.
+- **Endorsement recency review:** Current-use evidence and product-version changes are checked so stale testimonials are refreshed before approval.
 - **Endorser monitoring evidence:** The review queue distinguishes a documented training program from a completed monitoring run and corrective-action record.
 - **Synthetic endorser review:** Separates authorized and disclosed virtual personas from missing likeness permission or false real-user presentation before approval.
 - **Executive analytics:** Review speed, approval rate, projected revenue, payout exposure, and automated review coverage.
@@ -99,6 +100,7 @@ The data is designed to reflect common affiliate program operating problems:
 - Paid search partners that need keyword policy enforcement
 - Domain mismatch and traffic spike fraud indicators
 - AI-generated endorser personas that require likeness permission and clear audience disclosure
+- Endorsements whose current-use evidence is stale after a product update
 - Commission requests that need tier based governance
 
 ## Production roadmap

@@ -153,6 +153,11 @@ export const demoApplications: AffiliateApplication[] = [
         "Every earnings post carries a typical-results disclosure stating that most partners earn less than the featured result",
       ],
       syntheticEndorserReview: "authorized_and_disclosed",
+      endorsementRecency: "current_use_verified",
+      endorsementRecencyEvidence: [
+        "Creator confirmed current product use in a dated questionnaire after the current model release",
+        "Archived endorsement and current product page match, with no stale results claim reused",
+      ],
       syntheticEndorserEvidence: [
         "Virtual co-host likeness and voice permission are recorded for the campaign asset before paid placement",
         "Campaign captions disclose the generated virtual host and do not imply that a real person independently used the product",
@@ -314,12 +319,17 @@ export const demoApplications: AffiliateApplication[] = [
     reviewer: "Compliance bot",
     notes: "AI-generated comparison pages look commercially relevant, but disclosure placement and substantiation for product claims need verification before approval.",
     evidence: ["AI content sample", "Disclosure placement crawl", "Claim substantiation checklist"],
-    riskFlags: ["Missing affiliate disclosure", "AI content labeling review", "Testimonial authenticity review", "Sentiment-conditioned review incentives", "Negative review suppression risk", "Undisclosed insider review", "Misrepresented review site independence", "Cross-product review repurposing"],
+    riskFlags: ["Missing affiliate disclosure", "AI content labeling review", "Testimonial authenticity review", "Sentiment-conditioned review incentives", "Negative review suppression risk", "Undisclosed insider review", "Misrepresented review site independence", "Cross-product review repurposing", "Stale endorsement needs refresh"],
     complianceReview: {
       affiliateDisclosure: "missing",
       aiContentLabeling: "needs_evidence",
       claimSubstantiation: "needs_evidence",
       testimonialAuthenticity: "needs_evidence",
+      endorsementRecency: "needs_refresh",
+      endorsementRecencyEvidence: [
+        "Comparison page implies the reviewer still uses the product, but the latest product-access evidence predates the current model release",
+        "Product updates changed the reviewed features and no current-use confirmation or refreshed endorsement was supplied",
+      ],
       testimonialExperienceEvidence: [
         "Named reviewer identity and consent record",
         "Timestamped product-access or purchase evidence",
@@ -368,9 +378,11 @@ export const demoApplications: AffiliateApplication[] = [
         "Clear on-page ownership disclosure or separation evidence supporting the independence claim",
         "Product-by-product review provenance export matching each review to the product version it was written for",
         "Corrected pages that remove or re-collect legacy reviews attached to substantially different products",
+        "Current product-access or purchase evidence for every reviewer presented as a current user",
+        "Refreshed endorsement or archived-copy review when the product changed since the original experience",
       ],
       lastCheckedAt: "2026-06-06T12:05:00Z",
-      reviewerNote: "Hold approval until disclosure placement, claim substantiation, first-hand experience, sentiment-neutral incentives, content-neutral review moderation, the insider employee relationship, review-site ownership and independence, and cross-product review repurposing are verified.",
+      reviewerNote: "Hold approval until disclosure placement, claim substantiation, first-hand experience, sentiment-neutral incentives, content-neutral review moderation, the insider employee relationship, review-site ownership and independence, cross-product review repurposing, and current-use recency are verified.",
     },
   },
   {

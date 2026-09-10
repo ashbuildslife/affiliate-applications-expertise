@@ -6,6 +6,7 @@ const channels = new Set(["content", "paid_search", "influencer", "newsletter", 
 const liveDisclosureCadences = new Set(["repeated_periodically", "opening_only", "not_applicable", "missing"]);
 const disclosureLanguageMatches = new Set(["matched", "needs_translation", "unknown"]);
 const testimonialAuthenticityStatuses = new Set(["verified", "needs_evidence", "synthetic_persona_blocked"]);
+const endorsementRecencyStatuses = new Set(["current_use_verified", "needs_refresh", "not_applicable"]);
 const endorserMonitoringReadinesses = new Set(["documented", "needs_plan", "missing"]);
 const reviewIncentivePolicies = new Set(["neutral", "sentiment_conditioned", "not_used", "unknown"]);
 const reviewSuppressionPolicies = new Set(["content_neutral", "rating_filtered", "threats_or_intimidation", "unknown"]);
@@ -122,6 +123,54 @@ describe("affiliate applications expertise demo data", () => {
         expect(application.status).not.toBe("approved");
         expect(review?.reviewerNote).toMatch(/reviewer|first-hand|experience/i);
       }
+    }
+  });
+
+  it("keeps endorsements that may no longer reflect current use out of approval", () => {
+    const recencyReviews = demoApplications.filter(
+      (application) => application.complianceReview?.endorsementRecency,
+    );
+    const staleEndorsements = recencyReviews.filter(
+      (application) => application.complianceReview?.endorsementRecency === "needs_refresh",
+    );
+
+    expect(recencyReviews.length).toBeGreaterThanOrEqual(2);
+    expect(
+      recencyReviews.every((application) =>
+        endorsementRecencyStatuses.has(application.complianceReview?.endorsementRecency ?? ""),
+      ),
+    ).toBe(true);
+    expect(staleEndorsements.length).toBeGreaterThan(0);
+
+    for (const application of staleEndorsements) {
+      expect(application.status).not.toBe("approved");
+      expect(application.riskFlags).toEqual(
+        expect.arrayContaining([expect.stringMatching(/stale|refresh|current use/i)]),
+      );
+      expect(application.complianceReview?.endorsementRecencyEvidence?.join(" ")).toMatch(
+        /current|product-access|release|updated product/i,
+      );
+      expect(application.complianceReview?.evidenceRequested).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(/current.*product|product-access|purchase evidence/i),
+          expect.stringMatching(/refreshed endorsement|product changed|archived-copy/i),
+        ]),
+      );
+    }
+  });
+
+  it("requires dated current-use evidence before treating endorsement recency as verified", () => {
+    const currentUseReviews = demoApplications.filter(
+      (application) => application.complianceReview?.endorsementRecency === "current_use_verified",
+    );
+
+    expect(currentUseReviews.length).toBeGreaterThan(0);
+
+    for (const application of currentUseReviews) {
+      const evidence = application.complianceReview?.endorsementRecencyEvidence?.join(" ") ?? "";
+      expect(application.status).toBe("approved");
+      expect(evidence).toMatch(/current product use|dated/i);
+      expect(evidence).toMatch(/current model|product page|archived endorsement/i);
     }
   });
 
