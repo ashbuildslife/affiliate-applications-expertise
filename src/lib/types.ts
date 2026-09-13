@@ -10,6 +10,7 @@ export type DisclosureLanguageMatch = "matched" | "needs_translation" | "unknown
 export type DisclosureSpecificity = "specific" | "vague_or_ambiguous" | "unknown";
 export type LiveDisclosureCadence = "repeated_periodically" | "opening_only" | "not_applicable" | "missing";
 export type TestimonialAuthenticityStatus = "verified" | "needs_evidence" | "synthetic_persona_blocked";
+export type TestimonialReviewDisposition = "cleared_after_review" | "review_required" | "not_applicable";
 export type EndorsementRecencyStatus = "current_use_verified" | "needs_refresh" | "not_applicable";
 export type EndorserMonitoringReadiness = "documented" | "needs_plan" | "missing";
 export type ReviewIncentivePolicy = "neutral" | "sentiment_conditioned" | "not_used" | "unknown";
@@ -35,6 +36,8 @@ export interface ComplianceReview {
   publishedContentEvidence?: string[];
   testimonialAuthenticity?: TestimonialAuthenticityStatus;
   testimonialExperienceEvidence?: string[];
+  testimonialReviewDisposition?: TestimonialReviewDisposition;
+  testimonialReviewDispositionEvidence?: string[];
   endorsementRecency?: EndorsementRecencyStatus;
   endorsementRecencyEvidence?: string[];
   syntheticEndorserReview?: SyntheticEndorserReviewStatus;

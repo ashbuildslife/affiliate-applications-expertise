@@ -6,6 +6,7 @@ const channels = new Set(["content", "paid_search", "influencer", "newsletter", 
 const liveDisclosureCadences = new Set(["repeated_periodically", "opening_only", "not_applicable", "missing"]);
 const disclosureLanguageMatches = new Set(["matched", "needs_translation", "unknown"]);
 const testimonialAuthenticityStatuses = new Set(["verified", "needs_evidence", "synthetic_persona_blocked"]);
+const testimonialReviewDispositions = new Set(["cleared_after_review", "review_required", "not_applicable"]);
 const endorsementRecencyStatuses = new Set(["current_use_verified", "needs_refresh", "not_applicable"]);
 const endorserMonitoringReadinesses = new Set(["documented", "needs_plan", "missing"]);
 const reviewIncentivePolicies = new Set(["neutral", "sentiment_conditioned", "not_used", "unknown"]);
@@ -123,6 +124,36 @@ describe("affiliate applications expertise demo data", () => {
         expect(application.status).not.toBe("approved");
         expect(review?.reviewerNote).toMatch(/reviewer|first-hand|experience/i);
       }
+    }
+  });
+
+  it("routes testimonial red flags to an explicit human disposition", () => {
+    const redFlagReviews = demoApplications.filter(
+      (application) => application.complianceReview?.testimonialReviewDisposition,
+    );
+    const unresolvedRedFlagReviews = redFlagReviews.filter(
+      (application) => application.complianceReview?.testimonialReviewDisposition === "review_required",
+    );
+
+    expect(redFlagReviews.length).toBeGreaterThan(0);
+    expect(
+      redFlagReviews.every((application) =>
+        testimonialReviewDispositions.has(application.complianceReview?.testimonialReviewDisposition ?? ""),
+      ),
+    ).toBe(true);
+    expect(unresolvedRedFlagReviews.length).toBeGreaterThan(0);
+
+    for (const application of unresolvedRedFlagReviews) {
+      const review = application.complianceReview;
+      expect(application.status).not.toBe("approved");
+      expect(application.riskFlags).toEqual(expect.arrayContaining([expect.stringMatching(/testimonial/i)]));
+      expect(review?.testimonialReviewDispositionEvidence?.join(" ")).toMatch(
+        /red flag|rapid|wrong product|inquiry|product model/i,
+      );
+      expect(review?.evidenceRequested).toEqual(
+        expect.arrayContaining([expect.stringMatching(/red.?flag|rapid|wrong product|investigat/i)]),
+      );
+      expect(review?.reviewerNote).toMatch(/red flag|experience|verified/i);
     }
   });
 

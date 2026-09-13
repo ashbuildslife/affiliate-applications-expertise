@@ -335,6 +335,11 @@ export const demoApplications: AffiliateApplication[] = [
         "Timestamped product-access or purchase evidence",
         "Original interview or first-hand product experience transcript",
       ],
+      testimonialReviewDisposition: "review_required",
+      testimonialReviewDispositionEvidence: [
+        "Review was published within 24 hours of sample shipment, a red flag that requires inquiry before treating the experience claim as genuine",
+        "The review mentions a feature absent from the supplied product model, so the claimed experience and product identity remain unresolved",
+      ],
       reviewIncentivePolicy: "sentiment_conditioned",
       reviewIncentiveEvidence: [
         "Reviewer brief offers a bonus only for four- or five-star ratings",
@@ -369,6 +374,7 @@ export const demoApplications: AffiliateApplication[] = [
         "AI content labeling policy for comparison pages",
         "Source documentation for product ranking claims",
         "Named reviewer identity and first-hand product experience evidence",
+        "Testimonial red-flag review disposition for rapid posting or wrong-product claims",
         "Revised incentive policy making compensation independent of review sentiment",
         "Content-neutral moderation policy applied equally to positive and negative reviews",
         "Unfiltered review export reconciling published, rejected, and removed submissions",
@@ -382,7 +388,7 @@ export const demoApplications: AffiliateApplication[] = [
         "Refreshed endorsement or archived-copy review when the product changed since the original experience",
       ],
       lastCheckedAt: "2026-06-06T12:05:00Z",
-      reviewerNote: "Hold approval until disclosure placement, claim substantiation, first-hand experience, sentiment-neutral incentives, content-neutral review moderation, the insider employee relationship, review-site ownership and independence, cross-product review repurposing, and current-use recency are verified.",
+      reviewerNote: "Hold approval until disclosure placement, claim substantiation, first-hand experience, testimonial red flags, sentiment-neutral incentives, content-neutral review moderation, the insider employee relationship, review-site ownership and independence, cross-product review repurposing, and current-use recency are verified.",
     },
   },
   {

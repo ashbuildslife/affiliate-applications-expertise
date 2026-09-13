@@ -39,6 +39,7 @@ All records are fictional. The goal is to show product judgment and engineering 
 - **Endorsement recency review:** Current-use evidence and product-version changes are checked so stale testimonials are refreshed before approval.
 - **Endorser monitoring evidence:** The review queue distinguishes a documented training program from a completed monitoring run and corrective-action record.
 - **Synthetic endorser review:** Separates authorized and disclosed virtual personas from missing likeness permission or false real-user presentation before approval.
+- **Testimonial red-flag review:** Records human disposition when rapid posting or wrong-product signals make a claimed product experience questionable.
 - **Executive analytics:** Review speed, approval rate, projected revenue, payout exposure, and automated review coverage.
 - **Activity timeline:** Mixed AI, manual, compliance, payout, and approval events for realistic program operations.
 
@@ -100,6 +101,7 @@ The data is designed to reflect common affiliate program operating problems:
 - Paid search partners that need keyword policy enforcement
 - Domain mismatch and traffic spike fraud indicators
 - AI-generated endorser personas that require likeness permission and clear audience disclosure
+- Testimonial claims with red flags that require an explicit human inquiry before approval
 - Endorsements whose current-use evidence is stale after a product update
 - Commission requests that need tier based governance
 
